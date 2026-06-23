@@ -1,5 +1,7 @@
 import { createBrowserRouter, Navigate } from "react-router";
 import { AppShell } from "./components/layout/AppShell";
+import Onboarding from "./pages/auth/Onboarding";
+import SupportPage from "./pages/Support";
 import Home from "./pages/Home";
 import EngagementOverview from "./pages/engagement/Overview";
 import Encounters from "./pages/engagement/Encounters";
@@ -56,6 +58,14 @@ import LabCadence from "./pages/outcomes/LabCadence";
 import ReportBuilder from "./pages/outcomes/ReportBuilder";
 
 export const router = createBrowserRouter([
+  {
+    path: "/support",
+    Component: SupportPage,
+  },
+  {
+    path: "/onboarding",
+    Component: Onboarding,
+  },
   {
     path: "/",
     Component: AppShell,

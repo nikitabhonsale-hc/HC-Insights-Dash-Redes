@@ -1,5 +1,19 @@
 import { NavLink, useLocation } from "react-router";
-import { MessageSquarePlus, ChevronRight } from "lucide-react";
+import { 
+  MessageSquarePlus, 
+  ChevronRight, 
+  UserCog, 
+  UserPlus, 
+  Settings, 
+  Users, 
+  Activity, 
+  Palette, 
+  LayoutTemplate, 
+  MessageSquare, 
+  BookOpen, 
+  Info, 
+  LogOut 
+} from "lucide-react";
 import { NAV_ITEMS, HCC_NAV_ITEMS, ACO_NAV_ITEMS, OUTCOMES_NAV_ITEMS, SYSTEM_NAV_ITEMS, type NavItem } from "../../lib/navigation";
 import {
   Sidebar,
@@ -19,6 +33,14 @@ import {
 } from "../ui/sidebar";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "../ui/collapsible";
 import { Avatar, AvatarFallback } from "../ui/avatar";
+import { 
+  DropdownMenu, 
+  DropdownMenuContent, 
+  DropdownMenuItem, 
+  DropdownMenuLabel, 
+  DropdownMenuSeparator, 
+  DropdownMenuTrigger 
+} from "../ui/dropdown-menu";
 
 function NavMenu({ items }: { items: NavItem[] }) {
   const { pathname } = useLocation();
@@ -142,17 +164,81 @@ export function AppSidebar() {
             </SidebarMenuButton>
           </SidebarMenuItem>
           <SidebarMenuItem>
-            <SidebarMenuButton tooltip="Hannah Smith" className="h-auto py-1.5">
-              <Avatar className="size-7 rounded-md">
-                <AvatarFallback className="rounded-md bg-primary text-xs text-primary-foreground">
-                  HS
-                </AvatarFallback>
-              </Avatar>
-              <div className="flex min-w-0 flex-col leading-tight">
-                <span className="truncate text-sm text-foreground">Hannah Smith</span>
-                <span className="truncate text-[11px] text-slate-400">Administrator</span>
-              </div>
-            </SidebarMenuButton>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <SidebarMenuButton tooltip="HC Superadmin" className="h-auto py-1.5 data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground">
+                  <Avatar className="size-7 rounded-md">
+                    <AvatarFallback className="rounded-md bg-primary text-xs text-primary-foreground">
+                      HS
+                    </AvatarFallback>
+                  </Avatar>
+                  <div className="flex min-w-0 flex-col leading-tight">
+                    <span className="truncate text-sm text-foreground">HC Superadmin</span>
+                    <span className="truncate text-[11px] text-slate-400">hc_superadmin@gmail.com</span>
+                  </div>
+                </SidebarMenuButton>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="w-56" side="top" align="center" sideOffset={4}>
+                <DropdownMenuLabel className="p-0 font-normal">
+                  <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
+                    <Avatar className="size-8 rounded-md">
+                      <AvatarFallback className="rounded-md bg-primary text-xs text-primary-foreground">HS</AvatarFallback>
+                    </Avatar>
+                    <div className="grid flex-1 text-left text-sm leading-tight">
+                      <span className="truncate font-medium text-foreground">HC Superadmin</span>
+                      <span className="truncate text-xs text-muted-foreground">hc_superadmin@gmail.com</span>
+                    </div>
+                  </div>
+                </DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem>
+                  <UserCog className="mr-2" />
+                  Manage Users
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  <UserPlus className="mr-2" />
+                  Manage Onboarding
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  <Settings className="mr-2" />
+                  Manage Organization
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  <Users className="mr-2" />
+                  Org Patient Counts
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  <Activity className="mr-2" />
+                  Integration Monitoring
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem>
+                  <Palette className="mr-2" />
+                  Color Theme
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  <LayoutTemplate className="mr-2" />
+                  Survey Config
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  <MessageSquare className="mr-2" />
+                  Templates
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem>
+                  <BookOpen className="mr-2" />
+                  Guide
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  <Info className="mr-2" />
+                  About
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  <LogOut className="mr-2" />
+                  Log out
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarFooter>

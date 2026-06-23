@@ -3,6 +3,7 @@ import { Info } from "lucide-react";
 import { BarChart, Bar, CartesianGrid, XAxis, YAxis, Tooltip as RechartsTooltip, ResponsiveContainer, Cell, PieChart, Pie, Sector } from "recharts";
 import { useState } from "react";
 import { ChartTooltip } from "../components/dashboard/ChartTooltip";
+import { DataTable, type Column } from "../components/dashboard/DataTable";
 
 const overviewData = [
   { name: "Total Value", value: 1652117 },
@@ -82,6 +83,16 @@ export default function CostSavings() {
   const formatCurrency = (value: number) => {
     return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(value);
   };
+
+  const tableColumns: Column<any>[] = [
+    { key: "id", header: "Patient ID" },
+    { key: "name", header: "Patient Name" },
+    { key: "email", header: "Patient Email" },
+    { key: "cpt", header: "CPT Code : # of Visits" },
+    { key: "employer", header: "Employer" },
+    { key: "dpc", header: "DPC" },
+    { key: "physician", header: "Physician" },
+  ];
 
   const costSavingsChips = [
     { label: "Start Date", value: "01-01-2023", options: [] },
@@ -221,30 +232,13 @@ export default function CostSavings() {
       </div>
 
       {/* Bottom Section (Data Table) */}
-      <div className="rounded-2xl border border-transparent bg-card shadow-sm overflow-hidden flex flex-col min-h-[200px] stagger-section">
-        <div className="overflow-x-auto">
-          <table className="w-full text-left text-xs">
-            <thead className="bg-muted/50 border-b border-border text-muted-foreground font-semibold">
-              <tr>
-                <th className="px-4 py-3">Patient ID</th>
-                <th className="px-4 py-3">Patient Name</th>
-                <th className="px-4 py-3">Patient Email</th>
-                <th className="px-4 py-3">CPT Code : # of Visits</th>
-                <th className="px-4 py-3">Employer</th>
-                <th className="px-4 py-3">DPC</th>
-                <th className="px-4 py-3">Physician</th>
-              </tr>
-            </thead>
-            <tbody>
-              {/* Empty state matches the mockup */}
-              <tr>
-                <td colSpan={7} className="px-4 py-8 text-center text-muted-foreground text-xs">
-                  Click a service to show or hide patient details
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+      <div className="rounded-2xl border border-transparent flex flex-col min-h-[200px] stagger-section">
+        <DataTable
+          columns={tableColumns}
+          rows={[]} // Empty array to match the mockup empty state
+          rowKey={(_, i) => String(i)}
+          emptyMessage="Click a service to show or hide patient details"
+        />
       </div>
     </Page>
   );

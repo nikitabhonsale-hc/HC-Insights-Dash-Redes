@@ -1,5 +1,5 @@
 import { useMemo, useState, type ReactNode } from "react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, Search } from "lucide-react";
 import {
   Table,
   TableBody,
@@ -15,6 +15,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
+import { Input } from "../ui/input";
 import { cn } from "../ui/utils";
 
 export type Column<T> = {
@@ -33,6 +34,8 @@ type DataTableProps<T> = {
   rowKey: (row: T, index: number) => string;
   emptyMessage?: string;
   dense?: boolean;
+  attached?: boolean;
+  showFilterBar?: boolean;
 };
 
 export function DataTable<T>({
@@ -42,16 +45,43 @@ export function DataTable<T>({
   rowKey,
   emptyMessage = "No records found",
   dense = false,
+  attached = false,
+  showFilterBar = true,
 }: DataTableProps<T>) {
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(initialPageSize);
+  const [globalFilter, setGlobalFilter] = useState("");
+  const [sortConfig, setSortConfig] = useState<{ key: string; dir: "asc" | "desc" } | null>(null);
 
-  const totalPages = Math.max(1, Math.ceil(rows.length / pageSize));
+  const filteredRows = useMemo(() => {
+    let result = rows;
+    if (globalFilter) {
+      const lower = globalFilter.toLowerCase();
+      result = result.filter((row) => {
+        return columns.some((c) => {
+          const val = (row as Record<string, any>)[c.key];
+          return val && String(val).toLowerCase().includes(lower);
+        });
+      });
+    }
+    if (sortConfig) {
+      result = [...result].sort((a, b) => {
+        const valA = (a as Record<string, any>)[sortConfig.key];
+        const valB = (b as Record<string, any>)[sortConfig.key];
+        if (valA < valB) return sortConfig.dir === "asc" ? -1 : 1;
+        if (valA > valB) return sortConfig.dir === "asc" ? 1 : -1;
+        return 0;
+      });
+    }
+    return result;
+  }, [rows, columns, globalFilter, sortConfig]);
+
+  const totalPages = Math.max(1, Math.ceil(filteredRows.length / pageSize));
   const current = Math.min(page, totalPages);
   const start = (current - 1) * pageSize;
   const visible = useMemo(
-    () => rows.slice(start, start + pageSize),
-    [rows, start, pageSize],
+    () => filteredRows.slice(start, start + pageSize),
+    [filteredRows, start, pageSize],
   );
 
   const pageButtons = useMemo(() => {
@@ -66,7 +96,51 @@ export function DataTable<T>({
     a === "right" ? "text-right" : a === "center" ? "text-center" : "text-left";
 
   return (
-    <div className="overflow-hidden rounded-xl border border-transparent bg-card shadow-sm flex flex-col w-full min-w-0 h-full flex-1">
+    <div className={cn(
+      "overflow-hidden flex flex-col w-full min-w-0 h-full flex-1 bg-card",
+      attached ? "border-transparent shadow-none" : "rounded-xl border border-border/60 shadow-sm"
+    )}>
+      {showFilterBar && (
+        <div className="flex items-center justify-between gap-4 border-b border-border/60 bg-muted/20 px-4 py-2">
+          <div className="relative flex-1 max-w-sm">
+            <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
+            <Input 
+              placeholder="Search all columns..." 
+              value={globalFilter}
+              onChange={e => { setGlobalFilter(e.target.value); setPage(1); }}
+              className="pl-9 h-8 text-xs bg-background"
+            />
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="text-xs text-muted-foreground">Sort by:</span>
+            <Select 
+              value={sortConfig ? `${sortConfig.key}-${sortConfig.dir}` : "none"} 
+              onValueChange={v => {
+                if (v === "none") setSortConfig(null);
+                else {
+                  const [key, dir] = v.split("-");
+                  setSortConfig({ key, dir: dir as "asc" | "desc" });
+                }
+                setPage(1);
+              }}
+            >
+              <SelectTrigger className="h-8 w-[160px] text-xs bg-background">
+                <SelectValue placeholder="Default" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="none">Default order</SelectItem>
+                {columns.flatMap(c => {
+                  const label = typeof c.header === "string" ? c.header : c.key;
+                  return [
+                    <SelectItem key={`${c.key}-asc`} value={`${c.key}-asc`}>{label} (A-Z)</SelectItem>,
+                    <SelectItem key={`${c.key}-desc`} value={`${c.key}-desc`}>{label} (Z-A)</SelectItem>
+                  ];
+                })}
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
+      )}
       <div className="overflow-auto w-full min-w-0 flex-1 flex flex-col">
         <Table className="flex-1">
           <TableHeader className="sticky top-0 z-10">
@@ -143,9 +217,9 @@ export function DataTable<T>({
       {/* Footer / pagination */}
       <div className="flex flex-wrap items-center justify-between gap-3 border-t bg-muted/30 px-4 py-2.5 text-sm text-slate-500">
         <span>
-          Showing <span className="text-foreground tabular-nums">{rows.length === 0 ? 0 : start + 1}</span> to{" "}
-          <span className="text-foreground tabular-nums">{Math.min(start + pageSize, rows.length)}</span> of{" "}
-          <span className="text-foreground tabular-nums">{rows.length}</span> entries
+          Showing <span className="text-foreground tabular-nums">{filteredRows.length === 0 ? 0 : start + 1}</span> to{" "}
+          <span className="text-foreground tabular-nums">{Math.min(start + pageSize, filteredRows.length)}</span> of{" "}
+          <span className="text-foreground tabular-nums">{filteredRows.length}</span> entries
         </span>
         <div className="flex items-center gap-3">
           <div className="flex items-center gap-1">

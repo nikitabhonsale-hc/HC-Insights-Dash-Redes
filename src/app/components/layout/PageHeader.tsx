@@ -48,13 +48,13 @@ export function PageHeader({
               ))}
               <span className="text-slate-400">{title}</span>
             </nav>
-            <h2 className="text-foreground text-balance" style={{ fontSize: "1.4rem", lineHeight: 1.2 }}>
+            <h2 className="text-foreground text-balance font-semibold" style={{ fontSize: "1.4rem", lineHeight: 1.2 }}>
               {title}
             </h2>
           </div>
         ) : (
           <div className="flex flex-col">
-            <h2 className="text-foreground text-balance" style={{ fontSize: "1.4rem", lineHeight: 1.2 }}>
+            <h2 className="text-foreground text-balance font-semibold" style={{ fontSize: "1.4rem", lineHeight: 1.2 }}>
               {title}
             </h2>
             {subtitle && (

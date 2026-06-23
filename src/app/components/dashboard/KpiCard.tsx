@@ -81,7 +81,7 @@ export function KpiCard({
             </Tooltip>
           </TooltipProvider>
         ) : (
-          <Info className="size-3.5 shrink-0 text-slate-200" />
+          <Info className="size-3.5 shrink-0 text-slate-300" />
         )}
       </div>
 
