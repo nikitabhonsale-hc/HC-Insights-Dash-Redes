@@ -12,7 +12,9 @@ import {
   MessageSquare, 
   BookOpen, 
   Info, 
-  LogOut 
+  LogOut,
+  Check,
+  Pipette
 } from "lucide-react";
 import { NAV_ITEMS, HCC_NAV_ITEMS, ACO_NAV_ITEMS, OUTCOMES_NAV_ITEMS, SYSTEM_NAV_ITEMS, type NavItem } from "../../lib/navigation";
 import {
@@ -39,8 +41,24 @@ import {
   DropdownMenuItem, 
   DropdownMenuLabel, 
   DropdownMenuSeparator, 
-  DropdownMenuTrigger 
+  DropdownMenuTrigger,
+  DropdownMenuSub,
+  DropdownMenuSubTrigger,
+  DropdownMenuSubContent,
+  DropdownMenuPortal
 } from "../ui/dropdown-menu";
+import { cn } from "../ui/utils";
+import { useState } from "react";
+
+const THEME_COLORS = [
+  { id: "pink", value: "#e32168" },
+  { id: "blue", value: "#2563eb" },
+  { id: "teal", value: "#0d9488" },
+  { id: "orange", value: "#f59e0b" },
+  { id: "purple", value: "#8b5cf6" },
+  { id: "yellow", value: "#fbbf24" },
+  { id: "lightblue", value: "#0ea5e9" }
+];
 
 function NavMenu({ items }: { items: NavItem[] }) {
   const { pathname } = useLocation();
@@ -110,6 +128,71 @@ export function AppSidebar() {
   const isHcc = pathname.startsWith("/hcc");
   const isAco = pathname.startsWith("/aco");
   const isOutcomes = pathname.startsWith("/outcomes");
+
+  const [primaryColor, setPrimaryColor] = useState("#e32168");
+
+  const hexToRGB = (hex: string) => {
+    let r = parseInt(hex.slice(1, 3), 16),
+        g = parseInt(hex.slice(3, 5), 16),
+        b = parseInt(hex.slice(5, 7), 16);
+    return { r, g, b };
+  };
+
+  const mixWithWhite = (hex: string, percent: number) => {
+    let { r, g, b } = hexToRGB(hex);
+    r = Math.round(r + (255 - r) * (percent / 100));
+    g = Math.round(g + (255 - g) * (percent / 100));
+    b = Math.round(b + (255 - b) * (percent / 100));
+    return `#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`;
+  };
+
+  const mixWithBlack = (hex: string, percent: number) => {
+    let { r, g, b } = hexToRGB(hex);
+    r = Math.round(r * (1 - percent / 100));
+    g = Math.round(g * (1 - percent / 100));
+    b = Math.round(b * (1 - percent / 100));
+    return `#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`;
+  };
+
+  const getContrastText = (hex: string) => {
+    let { r, g, b } = hexToRGB(hex);
+    let yiq = ((r * 299) + (g * 587) + (b * 114)) / 1000;
+    return yiq >= 128 ? '#000000' : '#ffffff';
+  };
+
+  const handleColorChange = (color: string) => {
+    setPrimaryColor(color);
+    
+    const root = document.documentElement.style;
+    const fg = getContrastText(color);
+    const veryLight = mixWithWhite(color, 90);
+    const light = mixWithWhite(color, 20);
+    const dark1 = mixWithBlack(color, 15);
+    const dark2 = mixWithBlack(color, 30);
+    const dark3 = mixWithBlack(color, 50);
+
+    // Core Colors
+    root.setProperty("--primary", color);
+    root.setProperty("--primary-foreground", fg);
+    root.setProperty("--secondary", veryLight);
+    root.setProperty("--secondary-foreground", dark1);
+    root.setProperty("--accent", veryLight);
+    root.setProperty("--accent-foreground", dark3);
+    root.setProperty("--ring", light);
+    
+    // Sidebar Colors
+    root.setProperty("--sidebar-primary", color);
+    root.setProperty("--sidebar-primary-foreground", fg);
+    root.setProperty("--sidebar-accent", veryLight);
+    root.setProperty("--sidebar-accent-foreground", dark3);
+
+    // Chart Palette (Monochromatic scale)
+    root.setProperty("--chart-1", light);
+    root.setProperty("--chart-2", color);
+    root.setProperty("--chart-3", dark1);
+    root.setProperty("--chart-4", dark2);
+    root.setProperty("--chart-5", dark3);
+  };
 
   let navItems = NAV_ITEMS;
   let groupLabel = "Analytics";
@@ -212,10 +295,42 @@ export function AppSidebar() {
                   Integration Monitoring
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem>
-                  <Palette className="mr-2" />
-                  Color Theme
-                </DropdownMenuItem>
+                <DropdownMenuSub>
+                  <DropdownMenuSubTrigger>
+                    <Palette className="mr-2" />
+                    Color Theme
+                  </DropdownMenuSubTrigger>
+                  <DropdownMenuPortal>
+                    <DropdownMenuSubContent className="p-3 w-[220px]">
+                      <div className="font-medium text-slate-700 text-sm mb-3">Select Primary Color</div>
+                      <div className="grid grid-cols-4 gap-2">
+                        {THEME_COLORS.map((color) => (
+                          <button
+                            key={color.id}
+                            className={cn(
+                              "size-9 rounded-md flex items-center justify-center transition-all",
+                              primaryColor === color.value ? "ring-2 ring-slate-200 ring-offset-1" : "hover:scale-110"
+                            )}
+                            style={{ backgroundColor: color.value }}
+                            onClick={() => handleColorChange(color.value)}
+                          >
+                            {primaryColor === color.value && <Check className="size-5 text-white" strokeWidth={3} />}
+                          </button>
+                        ))}
+                        {/* Custom Color Button */}
+                        <div className="relative size-9 rounded-md border border-dashed border-slate-400 flex items-center justify-center hover:bg-slate-50 transition-colors cursor-pointer overflow-hidden group">
+                          <Pipette className="size-4 text-slate-500 group-hover:text-slate-700" />
+                          <input 
+                            type="color" 
+                            className="absolute inset-[-10px] opacity-0 cursor-pointer w-[200%] h-[200%]"
+                            value={primaryColor}
+                            onChange={(e) => handleColorChange(e.target.value)}
+                          />
+                        </div>
+                      </div>
+                    </DropdownMenuSubContent>
+                  </DropdownMenuPortal>
+                </DropdownMenuSub>
                 <DropdownMenuItem>
                   <LayoutTemplate className="mr-2" />
                   Survey Config

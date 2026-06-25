@@ -13,6 +13,8 @@ import {
   patientsWithoutEncounter,
   type PatientTouchRow,
 } from "../../data/datasets";
+import { usePageLoading } from "../../hooks/usePageLoading";
+import { KpiCardSkeleton, ChartSkeleton, TableSkeleton } from "../../components/dashboard/SkeletonPrimitives";
 
 const columns: Column<PatientTouchRow>[] = [
   { key: "id", header: "Patient ID", cell: (r) => <IdCell id={r.id} /> },
@@ -32,9 +34,24 @@ const noteLines = [
 ];
 
 export default function PatientTouchRatio() {
+  const isLoading = usePageLoading();
+
+
   const [tab, setTab] = useState("with");
 
   const rows = tab === "with" ? patientsWithEncounter : patientsWithoutEncounter;
+
+  if (isLoading) {
+    return (
+      <Page title="Patient Touch Ratio" crumbs={[{ label: "Engagement and Utilization", to: "/engagement" }]}>
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-1 mb-6">
+          <KpiCardSkeleton />
+        </div>
+        <ChartSkeleton height={280} className="mb-6" />
+        <TableSkeleton rows={6} cols={5} />
+      </Page>
+    );
+  }
 
   return (
     <Page

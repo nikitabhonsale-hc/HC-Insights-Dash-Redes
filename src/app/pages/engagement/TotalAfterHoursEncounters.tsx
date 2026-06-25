@@ -5,6 +5,8 @@ import { DataTable, type Column } from "../../components/dashboard/DataTable";
 import { IdCell } from "../../components/dashboard/cells";
 import { baseChips } from "../../data/filters";
 import { afterHoursEncounters, type EncounterRow } from "../../data/datasets";
+import { usePageLoading } from "../../hooks/usePageLoading";
+import { KpiCardSkeleton, ChartSkeleton } from "../../components/dashboard/SkeletonPrimitives";
 
 const columns: Column<EncounterRow>[] = [
   { key: "id", header: "Patient ID", cell: (r) => <IdCell id={r.id} /> },
@@ -18,6 +20,19 @@ const columns: Column<EncounterRow>[] = [
 ];
 
 export default function TotalAfterHoursEncounters() {
+  const isLoading = usePageLoading();
+
+  if (isLoading) {
+    return (
+      <Page title="Total # After Hours Encounters" crumbs={[{ label: "Engagement and Utilization", to: "/engagement" }]}>
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-1 mb-6">
+          <KpiCardSkeleton />
+        </div>
+        <ChartSkeleton height={280} className="mb-6" />
+      </Page>
+    );
+  }
+
   return (
     <Page
       title="Total # After Hours Encounters"

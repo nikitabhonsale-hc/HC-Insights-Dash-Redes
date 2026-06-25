@@ -6,6 +6,8 @@ import { DataTable, type Column } from "../../components/dashboard/DataTable";
 import { IdCell } from "../../components/dashboard/cells";
 import { baseChips } from "../../data/filters";
 import { encounters, encounterTrend, type EncounterRow } from "../../data/datasets";
+import { usePageLoading } from "../../hooks/usePageLoading";
+import { KpiCardSkeleton, ChartSkeleton, TableSkeleton } from "../../components/dashboard/SkeletonPrimitives";
 
 const columns: Column<EncounterRow>[] = [
   { key: "id", header: "Patient ID", cell: (r) => <IdCell id={r.id} /> },
@@ -26,6 +28,21 @@ const noteLines = [
 ];
 
 export default function Encounters() {
+  const isLoading = usePageLoading();
+
+  if (isLoading) {
+    return (
+      <Page title="Total # Encounters" crumbs={[{ label: "Engagement and Utilization", to: "/engagement" }]}>
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-2 mb-6">
+          <KpiCardSkeleton />
+          <KpiCardSkeleton />
+        </div>
+        <ChartSkeleton height={280} className="mb-6" />
+        <TableSkeleton rows={6} cols={5} />
+      </Page>
+    );
+  }
+
   return (
     <Page
       title="Total # Encounters"

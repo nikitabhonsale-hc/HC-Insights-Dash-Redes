@@ -8,6 +8,8 @@ import { IdCell } from "../../components/dashboard/cells";
 import { ToggleTabs } from "../../components/dashboard/ToggleTabs";
 import { baseChips } from "../../data/filters";
 import { digitalEngagement, digitalEngagementTrend } from "../../data/datasets";
+import { usePageLoading } from "../../hooks/usePageLoading";
+import { KpiCardSkeleton, ChartSkeleton, TableSkeleton } from "../../components/dashboard/SkeletonPrimitives";
 
 type Row = (typeof digitalEngagement)[number];
 
@@ -29,8 +31,23 @@ const noteLines = [
 ];
 
 export default function DigitalEngagement() {
+  const isLoading = usePageLoading();
+
+
   const [tab, setTab] = useState("overall");
   const rows = tab === "afterhours" ? digitalEngagement.filter((_, i) => i % 2 === 0) : digitalEngagement;
+
+  if (isLoading) {
+    return (
+      <Page title="Digital Engagement" crumbs={[{ label: "Engagement and Utilization", to: "/engagement" }]}>
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-1 mb-6">
+          <KpiCardSkeleton />
+        </div>
+        <ChartSkeleton height={280} className="mb-6" />
+        <TableSkeleton rows={6} cols={5} />
+      </Page>
+    );
+  }
 
   return (
     <Page

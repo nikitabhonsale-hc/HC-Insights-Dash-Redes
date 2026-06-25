@@ -3,6 +3,8 @@ import { labTrendsChips } from "../../data/filters";
 import { LineChart, RotateCcw, ChevronDown } from "lucide-react";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer, Tooltip as RechartsTooltip, Legend } from "recharts";
 import { Button } from "../../components/ui/button";
+import { usePageLoading } from "../../hooks/usePageLoading";
+import { KpiCardSkeleton, ChartSkeleton, TableSkeleton } from "../../components/dashboard/SkeletonPrimitives";
 
 const mockLabData = [
   { month: "Dec 24", belowRange: 0, withinRange: 45, aboveRange: 220 },
@@ -37,6 +39,21 @@ const CustomBarTooltip = ({ active, payload, label }: any) => {
 };
 
 export default function LabTrends() {
+  const isLoading = usePageLoading();
+
+  if (isLoading) {
+    return (
+      <Page title="Lab Trends" crumbs={[{ label: "Patient Outcomes" }]}>
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-2 mb-6">
+          <KpiCardSkeleton />
+          <KpiCardSkeleton />
+        </div>
+        <ChartSkeleton height={280} className="mb-6" />
+        <TableSkeleton rows={6} cols={5} />
+      </Page>
+    );
+  }
+
   return (
     <Page title="Lab Trends" crumbs={[{ label: "Patient Outcomes" }]} chips={labTrendsChips}>
       <div className="space-y-6">

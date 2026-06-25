@@ -3,6 +3,8 @@ import { DataTable, type Column } from "../components/dashboard/DataTable";
 import { IdCell } from "../components/dashboard/cells";
 import { claimsChips } from "../data/filters";
 import { claimsBilling, type BillingRow } from "../data/datasets";
+import { usePageLoading } from "../hooks/usePageLoading";
+import { TableSkeleton } from "../components/dashboard/SkeletonPrimitives";
 
 const columns: Column<BillingRow>[] = [
   { key: "id", header: "Patient ID", cell: (r) => <IdCell id={r.id} /> },
@@ -14,6 +16,16 @@ const columns: Column<BillingRow>[] = [
 ];
 
 export default function ClaimsBillingReport() {
+  const isLoading = usePageLoading();
+
+  if (isLoading) {
+    return (
+      <Page title="Claims Billing Report">
+        <TableSkeleton rows={6} cols={5} />
+      </Page>
+    );
+  }
+
   const chips = claimsChips.filter((c) => c.label !== "Division");
   return (
     <Page title="Claims Billing Report" chips={chips}>

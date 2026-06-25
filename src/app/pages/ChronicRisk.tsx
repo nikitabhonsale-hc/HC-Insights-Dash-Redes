@@ -13,6 +13,8 @@ import {
   chronicDistribution,
   topChronicConditions,
 } from "../data/datasets";
+import { usePageLoading } from "../hooks/usePageLoading";
+import { KpiCardSkeleton, PanelSkeleton } from "../components/dashboard/SkeletonPrimitives";
 
 type Row = (typeof chronicConditionPatients)[number];
 
@@ -26,9 +28,26 @@ const columns: Column<Row>[] = [
 ];
 
 export default function ChronicRisk() {
+  const isLoading = usePageLoading();
+
+
   const [mode, setMode] = useState("active");
   const [showTable, setShowTable] = useState(false);
   const chips = baseChips.filter((c) => c.label !== "Start Date" && c.label !== "End Date");
+
+  if (isLoading) {
+    return (
+      <Page title="Calculate Chronic Risk By">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-1 mb-6">
+          <KpiCardSkeleton />
+        </div>
+        <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 mb-6">
+          <PanelSkeleton height={220} />
+          <PanelSkeleton height={220} />
+        </div>
+      </Page>
+    );
+  }
 
   return (
     <Page

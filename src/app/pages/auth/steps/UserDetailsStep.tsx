@@ -70,7 +70,7 @@ export function UserDetailsStep({ onNext }: UserDetailsStepProps) {
         <span className="text-primary">Let's Get Started!</span>
       </h2>
 
-      <Button variant="outline" className="mb-6 flex w-full items-center justify-center gap-2 rounded-full py-6 text-base font-medium">
+      <Button variant="outline" className="mb-6 flex w-full items-center justify-center gap-2 rounded-full py-6 text-base font-medium hover:bg-slate-100 hover:text-slate-900 transition-transform duration-150 active:scale-[0.97]">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" className="size-5">
           <path fill="#FFC107" d="M43.611,20.083H42V20H24v8h11.303c-1.649,4.657-6.08,8-11.303,8c-6.627,0-12-5.373-12-12c0-6.627,5.373-12,12-12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C12.955,4,4,12.955,4,24c0,11.045,8.955,20,20,20c11.045,0,20-8.955,20-20C44,22.659,43.862,21.35,43.611,20.083z" />
           <path fill="#FF3D00" d="M6.306,14.691l6.571,4.819C14.655,15.108,18.961,12,24,12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C16.318,4,9.656,8.337,6.306,14.691z" />
@@ -96,7 +96,7 @@ export function UserDetailsStep({ onNext }: UserDetailsStepProps) {
           </label>
           <Input 
             placeholder="First name" 
-            className={cn("h-11", errors.firstName && "border-red-500 focus-visible:ring-red-500")}
+            className={cn("h-11 bg-slate-100 placeholder:text-slate-500 text-slate-900", errors.firstName && "border-red-500 focus-visible:ring-red-500")}
             value={formData.firstName}
             onChange={(e) => handleChange("firstName", e.target.value)}
           />
@@ -108,7 +108,7 @@ export function UserDetailsStep({ onNext }: UserDetailsStepProps) {
           </label>
           <Input 
             placeholder="Last name" 
-            className={cn("h-11", errors.lastName && "border-red-500 focus-visible:ring-red-500")}
+            className={cn("h-11 bg-slate-100 placeholder:text-slate-500 text-slate-900", errors.lastName && "border-red-500 focus-visible:ring-red-500")}
             value={formData.lastName}
             onChange={(e) => handleChange("lastName", e.target.value)}
           />
@@ -121,8 +121,8 @@ export function UserDetailsStep({ onNext }: UserDetailsStepProps) {
           Email <span className="text-primary">*</span>
         </label>
         <Input 
-          placeholder="hc_superuserprod@gmail.com" 
-          className={cn("h-11 bg-slate-100/50", errors.email && "border-red-500 focus-visible:ring-red-500")}
+          placeholder="john@example.com" 
+          className={cn("h-11 bg-slate-100 placeholder:text-slate-500 text-slate-900", errors.email && "border-red-500 focus-visible:ring-red-500")}
           value={formData.email}
           onChange={(e) => handleChange("email", e.target.value)}
         />
@@ -139,7 +139,8 @@ export function UserDetailsStep({ onNext }: UserDetailsStepProps) {
         <div className="relative">
           <Input
             type={showPassword ? "text" : "password"}
-            className={cn("h-11 pr-10 bg-slate-100/50", errors.password && "border-red-500 focus-visible:ring-red-500")}
+            placeholder="Enter Password"
+            className={cn("h-11 pr-10 bg-slate-100 placeholder:text-slate-500 text-slate-900", errors.password && "border-red-500 focus-visible:ring-red-500")}
             value={formData.password}
             onChange={(e) => handleChange("password", e.target.value)}
           />
@@ -163,8 +164,8 @@ export function UserDetailsStep({ onNext }: UserDetailsStepProps) {
         <div className="relative">
           <Input
             type={showConfirmPassword ? "text" : "password"}
-            placeholder="Confirm password"
-            className={cn("h-11 pr-10", errors.confirmPassword && "border-red-500 focus-visible:ring-red-500")}
+            placeholder="Enter Password"
+            className={cn("h-11 pr-10 bg-slate-100 placeholder:text-slate-500 text-slate-900", errors.confirmPassword && "border-red-500 focus-visible:ring-red-500")}
             value={formData.confirmPassword}
             onChange={(e) => handleChange("confirmPassword", e.target.value)}
           />

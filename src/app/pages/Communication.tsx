@@ -16,6 +16,8 @@ import {
   DropdownMenuTrigger,
 } from "../components/ui/dropdown-menu";
 import { ChevronDown } from "lucide-react";
+import { usePageLoading } from "../hooks/usePageLoading";
+import { PanelSkeleton } from "../components/dashboard/SkeletonPrimitives";
 
 const inboundRate = [
   { name: "Jan", Answered: 42, Unanswered: 8 },
@@ -99,6 +101,22 @@ function FilterDropdown({ label, options }: { label: string; options: string[] }
 }
 
 export default function Communication() {
+  const isLoading = usePageLoading();
+
+  if (isLoading) {
+    return (
+      <Page title="Communication">
+        <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 mb-6">
+          <PanelSkeleton height={220} />
+          <PanelSkeleton height={220} />
+        </div>
+        <PanelSkeleton height={180} className="mb-6" />
+        <PanelSkeleton height={180} className="mb-6" />
+        <PanelSkeleton height={180} className="mb-6" />
+      </Page>
+    );
+  }
+
   return (
     <Page title="Communication" chips={[]} showGenerateReport showIconActions={false}>
       <div className="flex flex-wrap items-center gap-2">

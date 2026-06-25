@@ -45,7 +45,7 @@ function Chip({ chip, onOptionSelect }: { chip: FilterChip; onOptionSelect?: (va
   );
 }
 
-export function FilterBar({ chips, onChipsChange }: { chips: FilterChip[], onChipsChange?: (chips: FilterChip[]) => void }) {
+export function FilterBar({ chips, onChipsChange, onFiltersClick }: { chips: FilterChip[], onChipsChange?: (chips: FilterChip[]) => void, onFiltersClick?: () => void }) {
   const parseDate = (dStr: string) => {
     if (!dStr) return undefined;
     const parts = dStr.split(/[-/]/);
@@ -90,10 +90,14 @@ export function FilterBar({ chips, onChipsChange }: { chips: FilterChip[], onChi
 
   return (
     <div className="flex flex-wrap items-center gap-2 border-y bg-card px-6 py-2.5">
-      <span className="flex items-center gap-1.5 text-xs text-slate-400">
+      <button
+        type="button"
+        onClick={onFiltersClick}
+        className="flex items-center gap-1.5 text-xs font-medium text-slate-500 rounded-full border border-slate-300 bg-slate-50 px-3 py-1.5 hover:bg-slate-200 hover:text-slate-700 hover:border-slate-400 transition-all duration-150 active:scale-[0.97] cursor-pointer"
+      >
         <Filter className="size-3.5" />
         Filters
-      </span>
+      </button>
       <span className="mr-1 h-4 w-px bg-border" />
       {chips.map((chip, index) => {
         const isDate = chip.label.toLowerCase().includes("date");

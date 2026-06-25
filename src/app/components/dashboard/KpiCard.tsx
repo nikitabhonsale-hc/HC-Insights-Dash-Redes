@@ -57,7 +57,7 @@ export function KpiCard({
           : undefined
       }
       className={cn(
-        "group relative gap-0 rounded-xl border border-transparent bg-card p-4 shadow-sm transition-[box-shadow,transform,background-color] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)]",
+        "group relative gap-0 rounded-xl border border-transparent bg-card p-6 shadow-sm transition-[box-shadow,transform,background-color] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)]",
         interactive &&
           "cursor-pointer hover:shadow-md hover:bg-accent/30 active:scale-[0.98] focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none",
         selected && "ring-2 ring-primary/40 shadow-md",

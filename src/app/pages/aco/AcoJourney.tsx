@@ -2,8 +2,25 @@ import { Search, ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "../../components/ui/button";
 import { Page } from "../../components/layout/Page";
 import { acoChips } from "../../data/filters";
+import { usePageLoading } from "../../hooks/usePageLoading";
+import { KpiCardSkeleton, ChartSkeleton } from "../../components/dashboard/SkeletonPrimitives";
 
 export default function AcoJourney() {
+  const isLoading = usePageLoading();
+
+  if (isLoading) {
+    return (
+      <Page title="Patient Journey" crumbs={[{ label: "ACO Insights" }]}>
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 mb-6">
+          <KpiCardSkeleton />
+          <KpiCardSkeleton />
+          <KpiCardSkeleton />
+        </div>
+        <ChartSkeleton height={280} className="mb-6" />
+      </Page>
+    );
+  }
+
   const mockPatients = Array.from({ length: 12 }).map((_, i) => {
     const idNum = (i + 1).toString().padStart(4, "0");
     const mrnNum = (i + 1).toString().padStart(8, "0");

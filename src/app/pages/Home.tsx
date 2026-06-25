@@ -32,6 +32,13 @@ import {
   DialogTitle,
   DialogDescription,
 } from "../components/ui/dialog";
+import { usePageLoading } from "../hooks/usePageLoading";
+import {
+  QuickActionSkeleton,
+  KpiSparklineSkeleton,
+  ChartSkeleton,
+  ActivityListSkeleton,
+} from "../components/dashboard/SkeletonPrimitives";
 
 const chartData = [
   { name: "Jan", inPerson: 12, virtual: 8 },
@@ -211,6 +218,7 @@ function KpiSparklineCard({
 export default function Home() {
   const navigate = useNavigate();
   const [activeAction, setActiveAction] = useState<string | null>(null);
+  const isLoading = usePageLoading();
 
   const hour = new Date().getHours();
   let greeting = "Good evening, Hannah!";
@@ -218,6 +226,44 @@ export default function Home() {
   else if (hour < 18) greeting = "Good afternoon, Hannah!";
 
   const subtitleText = "Stay on top of your practice, monitor patient progress, and track engagement.";
+
+  if (isLoading) {
+    return (
+      <Page title={greeting} subtitle={subtitleText}>
+        <div className="mb-6">
+          <div className="flex items-center gap-2 mb-3">
+            <div className="size-4 rounded bg-accent animate-pulse" />
+            <div className="h-3 w-48 rounded bg-accent animate-pulse" />
+          </div>
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            <QuickActionSkeleton />
+            <QuickActionSkeleton />
+            <QuickActionSkeleton />
+          </div>
+        </div>
+        <div className="flex items-center gap-2 mb-3">
+          <div className="size-4 rounded bg-accent animate-pulse" />
+          <div className="h-3 w-40 rounded bg-accent animate-pulse" />
+        </div>
+        <div className="mb-6 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+          <KpiSparklineSkeleton />
+          <KpiSparklineSkeleton />
+          <KpiSparklineSkeleton />
+          <KpiSparklineSkeleton />
+        </div>
+        <div className="grid grid-cols-1 gap-6 xl:grid-cols-3">
+          <div className="flex flex-col gap-6 xl:col-span-2">
+            <ChartSkeleton height={300} />
+            <ChartSkeleton height={300} />
+          </div>
+          <div className="flex flex-col gap-6">
+            <ChartSkeleton height={200} />
+            <ActivityListSkeleton items={6} />
+          </div>
+        </div>
+      </Page>
+    );
+  }
 
   return (
     <Page title={greeting} subtitle={subtitleText}>

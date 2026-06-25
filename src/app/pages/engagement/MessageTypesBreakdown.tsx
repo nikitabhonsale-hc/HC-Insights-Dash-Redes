@@ -4,6 +4,8 @@ import { Panel } from "../../components/dashboard/EmptyState";
 import { HorizontalBar } from "../../components/dashboard/charts";
 import { baseChips } from "../../data/filters";
 import { messageTypeBreakdown } from "../../data/datasets";
+import { usePageLoading } from "../../hooks/usePageLoading";
+import { KpiCardSkeleton, ChartSkeleton } from "../../components/dashboard/SkeletonPrimitives";
 
 const breakdownSubs = messageTypeBreakdown.map((d) => ({
   value: `${d.value}%`,
@@ -12,6 +14,19 @@ const breakdownSubs = messageTypeBreakdown.map((d) => ({
 }));
 
 export default function MessageTypesBreakdown() {
+  const isLoading = usePageLoading();
+
+  if (isLoading) {
+    return (
+      <Page title="Message Types - Breakdown" crumbs={[{ label: "Engagement and Utilization", to: "/engagement" }]}>
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-1 mb-6">
+          <KpiCardSkeleton />
+        </div>
+        <ChartSkeleton height={280} className="mb-6" />
+      </Page>
+    );
+  }
+
   return (
     <Page
       title="Message Types - Breakdown"

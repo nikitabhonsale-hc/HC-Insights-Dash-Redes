@@ -5,6 +5,8 @@ import { ClipboardCheck, ShieldCheck, Download, Filter } from "lucide-react";
 import { DataTable, type Column } from "../../components/dashboard/DataTable";
 import { Button } from "../../components/ui/button";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer, Tooltip as RechartsTooltip, Legend } from "recharts";
+import { usePageLoading } from "../../hooks/usePageLoading";
+import { KpiCardSkeleton, TableSkeleton } from "../../components/dashboard/SkeletonPrimitives";
 
 type ScreeningRow = {
   id: string;
@@ -92,7 +94,24 @@ const columns: Column<ScreeningRow>[] = [
 ];
 
 export default function ScreeningsDue() {
+  const isLoading = usePageLoading();
+
+
   const [data] = useState<ScreeningRow[]>(mockTableData);
+
+  if (isLoading) {
+    return (
+      <Page title="Screenings Due" crumbs={[{ label: "Patient Outcomes" }]}>
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 mb-6">
+          <KpiCardSkeleton />
+          <KpiCardSkeleton />
+          <KpiCardSkeleton />
+          <KpiCardSkeleton />
+        </div>
+        <TableSkeleton rows={6} cols={5} />
+      </Page>
+    );
+  }
 
   return (
     <Page title="Screenings Due" crumbs={[{ label: "Patient Outcomes" }]} chips={screeningsChips}>

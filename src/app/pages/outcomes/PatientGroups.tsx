@@ -5,6 +5,8 @@ import { Icd10Code } from "../../components/ui/icd10-code";
 import { Users, Download, Filter } from "lucide-react";
 import { DataTable, type Column } from "../../components/dashboard/DataTable";
 import { Button } from "../../components/ui/button";
+import { usePageLoading } from "../../hooks/usePageLoading";
+import { KpiCardSkeleton, TableSkeleton } from "../../components/dashboard/SkeletonPrimitives";
 
 type PatientGroupRow = {
   id: string;
@@ -69,7 +71,23 @@ const columns: Column<PatientGroupRow>[] = [
 ];
 
 export default function PatientGroups() {
+  const isLoading = usePageLoading();
+
+
   const [data] = useState<PatientGroupRow[]>(mockData);
+
+  if (isLoading) {
+    return (
+      <Page title="Patient Groups" crumbs={[{ label: "Patient Outcomes" }]}>
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 mb-6">
+          <KpiCardSkeleton />
+          <KpiCardSkeleton />
+          <KpiCardSkeleton />
+        </div>
+        <TableSkeleton rows={6} cols={5} />
+      </Page>
+    );
+  }
 
   return (
     <Page title="Patient Groups" crumbs={[{ label: "Patient Outcomes" }]} chips={patientGroupsChips}>

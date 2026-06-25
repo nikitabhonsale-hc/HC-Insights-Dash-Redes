@@ -11,6 +11,8 @@ import {
   afterHoursPrescriptionsRefills,
   type PrescriptionRow,
 } from "../../data/datasets";
+import { usePageLoading } from "../../hooks/usePageLoading";
+import { KpiCardSkeleton, ChartSkeleton } from "../../components/dashboard/SkeletonPrimitives";
 
 const columns: Column<PrescriptionRow>[] = [
   { key: "id", header: "Patient ID", cell: (r) => <IdCell id={r.id} /> },
@@ -25,9 +27,24 @@ const columns: Column<PrescriptionRow>[] = [
 ];
 
 export default function TotalAfterHoursPrescriptions() {
+  const isLoading = usePageLoading();
+
+
   const [tab, setTab] = useState("overall");
 
   const rows = tab === "overall" ? afterHoursPrescriptionsOverall : afterHoursPrescriptionsRefills;
+
+  if (isLoading) {
+    return (
+      <Page title="Total # After Hours Prescriptions" crumbs={[{ label: "Engagement and Utilization", to: "/engagement" }]}>
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-2 mb-6">
+          <KpiCardSkeleton />
+          <KpiCardSkeleton />
+        </div>
+        <ChartSkeleton height={280} className="mb-6" />
+      </Page>
+    );
+  }
 
   return (
     <Page

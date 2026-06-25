@@ -8,8 +8,13 @@ import { RadioGroup, RadioGroupItem } from "../components/ui/radio-group";
 import { Label } from "../components/ui/label";
 import { claimsChips } from "../data/filters";
 import { claimsCostPmpm } from "../data/datasets";
+import { usePageLoading } from "../hooks/usePageLoading";
+import { KpiCardSkeleton, ChartSkeleton } from "../components/dashboard/SkeletonPrimitives";
 
 export default function ClaimsUtilization() {
+  const isLoading = usePageLoading();
+
+
   const [mode, setMode] = useState("pmpm");
   const scale = mode === "total" ? 1200 : 1;
   const data = claimsCostPmpm.map((d) => ({
@@ -17,6 +22,21 @@ export default function ClaimsUtilization() {
     DPC: d.DPC * scale,
     "Non DPC": d["Non DPC"] * scale,
   }));
+
+  if (isLoading) {
+    return (
+      <Page title="Claims Utilization">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 mb-6">
+          <KpiCardSkeleton />
+          <KpiCardSkeleton />
+          <KpiCardSkeleton />
+          <KpiCardSkeleton />
+          <KpiCardSkeleton />
+        </div>
+        <ChartSkeleton height={280} className="mb-6" />
+      </Page>
+    );
+  }
 
   return (
     <Page title="Claims Utilization" chips={claimsChips}>

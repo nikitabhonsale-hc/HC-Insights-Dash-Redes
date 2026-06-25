@@ -10,6 +10,8 @@ import {
   inactiveManifestMembers,
   type ManifestMemberRow,
 } from "../../data/datasets";
+import { usePageLoading } from "../../hooks/usePageLoading";
+import { KpiCardSkeleton, ChartSkeleton, TableSkeleton } from "../../components/dashboard/SkeletonPrimitives";
 
 const columns: Column<ManifestMemberRow>[] = [
   { key: "id", header: "Manifest Member ID", cell: (r) => <IdCell id={r.id} /> },
@@ -23,9 +25,24 @@ const columns: Column<ManifestMemberRow>[] = [
 ];
 
 export default function TotalActiveManifestMembers() {
+  const isLoading = usePageLoading();
+
+
   const [activeTab, setActiveTab] = useState<"active" | "inactive">("active");
 
   const rows = activeTab === "active" ? activeManifestMembers : inactiveManifestMembers;
+
+  if (isLoading) {
+    return (
+      <Page title="Total # Active Manifest Members" crumbs={[{ label: "Engagement and Utilization", to: "/engagement" }]}>
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-1 mb-6">
+          <KpiCardSkeleton />
+        </div>
+        <ChartSkeleton height={280} className="mb-6" />
+        <TableSkeleton rows={6} cols={5} />
+      </Page>
+    );
+  }
 
   return (
     <Page

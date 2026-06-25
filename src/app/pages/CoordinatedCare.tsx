@@ -19,6 +19,8 @@ import {
   claimsCategoryAmount,
   serviceTypeAmount,
 } from "../data/datasets";
+import { usePageLoading } from "../hooks/usePageLoading";
+import { KpiCardSkeleton, PanelSkeleton } from "../components/dashboard/SkeletonPrimitives";
 
 const TABS = [
   { value: "categories", label: "Coordinated Care Categories" },
@@ -31,7 +33,28 @@ const TABS = [
 const money = (v: number) => `$${v.toLocaleString(undefined, { maximumFractionDigits: 2 })}`;
 
 export default function CoordinatedCare() {
+  const isLoading = usePageLoading();
+
+
   const [tab, setTab] = useState("categories");
+
+  if (isLoading) {
+    return (
+      <Page title="Coordinated Care">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-5 mb-6">
+          <KpiCardSkeleton />
+          <KpiCardSkeleton />
+          <KpiCardSkeleton />
+          <KpiCardSkeleton />
+          <KpiCardSkeleton />
+        </div>
+        <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 mb-6">
+          <PanelSkeleton height={220} />
+          <PanelSkeleton height={220} />
+        </div>
+      </Page>
+    );
+  }
 
   return (
     <Page title="Coordinated Care" chips={coordinatedCareChips}>

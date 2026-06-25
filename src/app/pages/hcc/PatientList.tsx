@@ -38,8 +38,13 @@ import { Page } from "../../components/layout/Page";
 import { hccChips } from "../../data/filters";
 import { useState, useMemo } from "react";
 import { PatientProfileSidebar } from "./PatientProfileSidebar";
+import { usePageLoading } from "../../hooks/usePageLoading";
+import { TableSkeleton } from "../../components/dashboard/SkeletonPrimitives";
 
 export default function HccPatientList() {
+  const isLoading = usePageLoading();
+
+
   const [selectedPatient, setSelectedPatient] = useState<PatientRow | null>(null);
 
   const columns = useMemo<Column<PatientRow>[]>(() => [
@@ -92,6 +97,14 @@ export default function HccPatientList() {
       ),
     },
   ], []);
+
+  if (isLoading) {
+    return (
+      <Page title="Patient List" crumbs={[{ label: "HCC Insights" }]}>
+        <TableSkeleton rows={6} cols={5} />
+      </Page>
+    );
+  }
 
   return (
     <Page title="Patient List" crumbs={[{ label: "HCC Insights" }]} chips={hccChips}>

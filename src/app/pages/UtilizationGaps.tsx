@@ -6,6 +6,8 @@ import { IdCell, BoolBadge } from "../components/dashboard/cells";
 import { utilizationGapsChips } from "../data/filters";
 import { utilizationGaps, type GapPatientRow } from "../data/datasets";
 import { Tooltip, TooltipTrigger, TooltipContent } from "../components/ui/tooltip";
+import { usePageLoading } from "../hooks/usePageLoading";
+import { KpiCardSkeleton, TableSkeleton } from "../components/dashboard/SkeletonPrimitives";
 
 const DIAGNOSIS_MAP: Record<string, string> = {
   "E78.5": "Hyperlipidemia, unspecified",
@@ -78,6 +80,19 @@ const columns: Column<GapPatientRow>[] = [
 ];
 
 export default function UtilizationGaps() {
+  const isLoading = usePageLoading();
+
+  if (isLoading) {
+    return (
+      <Page title="Utilization Gaps">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-1 mb-6">
+          <KpiCardSkeleton />
+        </div>
+        <TableSkeleton rows={6} cols={5} />
+      </Page>
+    );
+  }
+
   return (
     <Page title="Utilization Gaps" chips={utilizationGapsChips}>
       <div className="stagger-section mb-6">

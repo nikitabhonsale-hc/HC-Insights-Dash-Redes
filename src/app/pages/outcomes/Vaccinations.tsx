@@ -4,6 +4,8 @@ import { vaccinationsChips } from "../../data/filters";
 import { ShieldAlert, Download, Filter } from "lucide-react";
 import { DataTable, type Column } from "../../components/dashboard/DataTable";
 import { Button } from "../../components/ui/button";
+import { usePageLoading } from "../../hooks/usePageLoading";
+import { KpiCardSkeleton, TableSkeleton } from "../../components/dashboard/SkeletonPrimitives";
 
 type VaccinationRow = {
   id: string;
@@ -59,7 +61,23 @@ const columns: Column<VaccinationRow>[] = [
 ];
 
 export default function Vaccinations() {
+  const isLoading = usePageLoading();
+
+
   const [data] = useState<VaccinationRow[]>(mockTableData);
+
+  if (isLoading) {
+    return (
+      <Page title="Vaccinations" crumbs={[{ label: "Patient Outcomes" }]}>
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 mb-6">
+          <KpiCardSkeleton />
+          <KpiCardSkeleton />
+          <KpiCardSkeleton />
+        </div>
+        <TableSkeleton rows={6} cols={5} />
+      </Page>
+    );
+  }
 
   return (
     <Page title="Vaccinations" crumbs={[{ label: "Patient Outcomes" }]} chips={vaccinationsChips}>

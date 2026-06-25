@@ -4,6 +4,8 @@ import { labCadenceChips } from "../../data/filters";
 import { CalendarDays, Download, Filter, ChevronDown } from "lucide-react";
 import { DataTable, type Column } from "../../components/dashboard/DataTable";
 import { Button } from "../../components/ui/button";
+import { usePageLoading } from "../../hooks/usePageLoading";
+import { KpiCardSkeleton, ChartSkeleton, TableSkeleton } from "../../components/dashboard/SkeletonPrimitives";
 
 type CadenceRow = {
   id: string;
@@ -61,7 +63,23 @@ const columns: Column<CadenceRow>[] = [
 ];
 
 export default function LabCadence() {
+  const isLoading = usePageLoading();
+
+
   const [data] = useState<CadenceRow[]>(mockTableData);
+
+  if (isLoading) {
+    return (
+      <Page title="Lab Cadence" crumbs={[{ label: "Patient Outcomes" }]}>
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-2 mb-6">
+          <KpiCardSkeleton />
+          <KpiCardSkeleton />
+        </div>
+        <ChartSkeleton height={280} className="mb-6" />
+        <TableSkeleton rows={6} cols={5} />
+      </Page>
+    );
+  }
 
   return (
     <Page title="Lab Cadence" crumbs={[{ label: "Patient Outcomes" }]} chips={labCadenceChips}>

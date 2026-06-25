@@ -4,6 +4,8 @@ import { BarChart, Bar, CartesianGrid, XAxis, YAxis, Tooltip as RechartsTooltip,
 import { useState } from "react";
 import { ChartTooltip } from "../components/dashboard/ChartTooltip";
 import { DataTable, type Column } from "../components/dashboard/DataTable";
+import { usePageLoading } from "../hooks/usePageLoading";
+import { KpiCardSkeleton, ChartSkeleton, PieChartSkeleton, TableSkeleton } from "../components/dashboard/SkeletonPrimitives";
 
 const overviewData = [
   { name: "Total Value", value: 1652117 },
@@ -78,8 +80,24 @@ const renderActiveShape = (props: any) => {
 
 
 export default function CostSavings() {
+  const isLoading = usePageLoading();
   const [activeIndex, setActiveIndex] = useState<number | undefined>(undefined);
 
+  if (isLoading) {
+    return (
+      <Page title="Cost Savings">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-1 mb-6">
+          <KpiCardSkeleton />
+        </div>
+        <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 mb-6">
+          <ChartSkeleton height={280} />
+          <ChartSkeleton height={280} />
+        </div>
+        <PieChartSkeleton className="mb-6" />
+        <TableSkeleton rows={6} cols={5} />
+      </Page>
+    );
+  }
   const formatCurrency = (value: number) => {
     return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(value);
   };

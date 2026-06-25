@@ -1,6 +1,8 @@
 import { DataTable, type Column } from "../../components/dashboard/DataTable";
 import { Page } from "../../components/layout/Page";
 import { acoChips } from "../../data/filters";
+import { usePageLoading } from "../../hooks/usePageLoading";
+import { KpiCardSkeleton, TableSkeleton } from "../../components/dashboard/SkeletonPrimitives";
 
 type GapRow = {
   id: string;
@@ -67,6 +69,21 @@ const columns: Column<GapRow>[] = [
 ];
 
 export default function AcoGapsTracker() {
+  const isLoading = usePageLoading();
+
+  if (isLoading) {
+    return (
+      <Page title="Gaps Tracker" crumbs={[{ label: "ACO Insights" }]}>
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 mb-6">
+          <KpiCardSkeleton />
+          <KpiCardSkeleton />
+          <KpiCardSkeleton />
+        </div>
+        <TableSkeleton rows={6} cols={5} />
+      </Page>
+    );
+  }
+
   return (
     <Page title="Gaps in Care Tracker" crumbs={[{ label: "ACO Insights" }]} chips={acoChips}>
       <div className="space-y-6">

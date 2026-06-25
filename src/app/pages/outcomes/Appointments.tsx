@@ -2,6 +2,8 @@ import { Page } from "../../components/layout/Page";
 import { appointmentsChips } from "../../data/filters";
 import { CalendarClock } from "lucide-react";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer, Tooltip as RechartsTooltip, Legend } from "recharts";
+import { usePageLoading } from "../../hooks/usePageLoading";
+import { KpiCardSkeleton, TableSkeleton } from "../../components/dashboard/SkeletonPrimitives";
 
 const mockChartData = [
   { month: "Dec 24", scheduled: 0, completed: 650, missed: 150, cancelled: 50 },
@@ -38,6 +40,21 @@ const CustomBarTooltip = ({ active, payload, label }: any) => {
 };
 
 export default function Appointments() {
+  const isLoading = usePageLoading();
+
+  if (isLoading) {
+    return (
+      <Page title="Appointments" crumbs={[{ label: "Patient Outcomes" }]}>
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 mb-6">
+          <KpiCardSkeleton />
+          <KpiCardSkeleton />
+          <KpiCardSkeleton />
+        </div>
+        <TableSkeleton rows={6} cols={5} />
+      </Page>
+    );
+  }
+
   return (
     <Page title="Appointments" crumbs={[{ label: "Patient Outcomes" }]} chips={appointmentsChips}>
       <div className="space-y-6">

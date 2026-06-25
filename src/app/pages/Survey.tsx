@@ -25,6 +25,8 @@ import {
   surveyTopPhysicians,
   type SurveyEncounterRow,
 } from "../data/datasets";
+import { usePageLoading } from "../hooks/usePageLoading";
+import { KpiCardSkeleton, PanelSkeleton, TableSkeleton } from "../components/dashboard/SkeletonPrimitives";
 
 const TABS = [
   { value: "recent", label: "Recent Encounters" },
@@ -87,8 +89,29 @@ function MiniTable({
 }
 
 export default function Survey() {
+  const isLoading = usePageLoading();
+
+
   const [type, setType] = useState("csat");
   const [tab, setTab] = useState("dashboard");
+
+  if (isLoading) {
+    return (
+      <Page title="Survey Type">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 mb-6">
+          <KpiCardSkeleton />
+          <KpiCardSkeleton />
+          <KpiCardSkeleton />
+          <KpiCardSkeleton />
+        </div>
+        <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 mb-6">
+          <PanelSkeleton height={220} />
+          <PanelSkeleton height={220} />
+        </div>
+        <TableSkeleton rows={6} cols={5} />
+      </Page>
+    );
+  }
 
   return (
     <Page

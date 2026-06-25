@@ -5,6 +5,8 @@ import { Page } from "../../components/layout/Page";
 import { hccChips } from "../../data/filters";
 import { PATIENT_DATA, PatientRow } from "../../data/patients";
 import { DataTable, type Column } from "../../components/dashboard/DataTable";
+import { usePageLoading } from "../../hooks/usePageLoading";
+import { KpiCardSkeleton, TableSkeleton } from "../../components/dashboard/SkeletonPrimitives";
 
 type FindingType = "Gap" | "Compliance" | "Overcode";
 
@@ -30,6 +32,9 @@ type AuditResultData = {
 };
 
 export default function HccBulkAudit() {
+  const isLoading = usePageLoading();
+
+
   const [criteria, setCriteria] = useState("");
   const [isAuditing, setIsAuditing] = useState(false);
   const [showError, setShowError] = useState(false);
@@ -153,6 +158,20 @@ export default function HccBulkAudit() {
       ),
     },
   ];
+
+  if (isLoading) {
+    return (
+      <Page title="Bulk Audit" crumbs={[{ label: "HCC Insights" }]}>
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 mb-6">
+          <KpiCardSkeleton />
+          <KpiCardSkeleton />
+          <KpiCardSkeleton />
+          <KpiCardSkeleton />
+        </div>
+        <TableSkeleton rows={6} cols={5} />
+      </Page>
+    );
+  }
 
   return (
     <Page title="Bulk HCC Audit" crumbs={[{ label: "HCC Insights" }]} chips={hccChips}>

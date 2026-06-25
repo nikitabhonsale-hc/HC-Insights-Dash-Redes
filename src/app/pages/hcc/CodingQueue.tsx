@@ -6,8 +6,13 @@ import { hccChips } from "../../data/filters";
 import { PATIENT_DATA, PatientRow } from "../../data/patients";
 import { PatientProfileSidebar } from "./PatientProfileSidebar";
 import { Icd10Code } from "../../components/ui/icd10-code";
+import { usePageLoading } from "../../hooks/usePageLoading";
+import { KpiCardSkeleton, TableSkeleton } from "../../components/dashboard/SkeletonPrimitives";
 
 export default function HccCodingQueue() {
+  const isLoading = usePageLoading();
+
+
   const [patients, setPatients] = useState<PatientRow[]>(PATIENT_DATA);
   const [selectedPatientId, setSelectedPatientId] = useState<string | null>(null);
 
@@ -145,6 +150,19 @@ export default function HccCodingQueue() {
       ),
     },
   ];
+
+  if (isLoading) {
+    return (
+      <Page title="Coding Queue" crumbs={[{ label: "HCC Insights" }]}>
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 mb-6">
+          <KpiCardSkeleton />
+          <KpiCardSkeleton />
+          <KpiCardSkeleton />
+        </div>
+        <TableSkeleton rows={6} cols={5} />
+      </Page>
+    );
+  }
 
   return (
     <>

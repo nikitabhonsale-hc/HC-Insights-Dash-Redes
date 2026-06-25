@@ -19,6 +19,8 @@ import {
 import { Page } from "../../components/layout/Page";
 import { KpiCard } from "../../components/dashboard/KpiCard";
 import { engagementChips } from "../../data/filters";
+import { usePageLoading } from "../../hooks/usePageLoading";
+import { KpiCardSkeleton } from "../../components/dashboard/SkeletonPrimitives";
 
 function SectionLabel({ children }: { children: string }) {
   return (
@@ -31,6 +33,25 @@ function SectionLabel({ children }: { children: string }) {
 
 export default function EngagementOverview() {
   const navigate = useNavigate();
+  const isLoading = usePageLoading();
+
+  if (isLoading) {
+    return (
+      <Page title="Engagement and Utilization" chips={engagementChips}>
+        {[0, 1, 2].map((s) => (
+          <section key={s} className="stagger-section">
+            <div className="mb-3 mt-1 flex items-center gap-2">
+              <div className="h-3 w-24 rounded bg-accent animate-pulse" />
+              <span className="h-px flex-1 bg-border" />
+            </div>
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5">
+              {Array.from({ length: 5 }).map((_, i) => (<KpiCardSkeleton key={i} />))}
+            </div>
+          </section>
+        ))}
+      </Page>
+    );
+  }
 
   return (
     <Page title="Engagement and Utilization" chips={engagementChips}>

@@ -4,6 +4,8 @@ import { Panel } from "../../components/dashboard/EmptyState";
 import { AreaTrend } from "../../components/dashboard/charts";
 import { baseChips } from "../../data/filters";
 import { totalMessagesTrend } from "../../data/datasets";
+import { usePageLoading } from "../../hooks/usePageLoading";
+import { KpiCardSkeleton, ChartSkeleton, TableSkeleton } from "../../components/dashboard/SkeletonPrimitives";
 
 const noteLines = [
   "Date Range < 15 Days: Daily data, each day as a unit.",
@@ -13,6 +15,20 @@ const noteLines = [
 ];
 
 export default function TotalMessages() {
+  const isLoading = usePageLoading();
+
+  if (isLoading) {
+    return (
+      <Page title="Total # Messages" crumbs={[{ label: "Engagement and Utilization", to: "/engagement" }]}>
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-1 mb-6">
+          <KpiCardSkeleton />
+        </div>
+        <ChartSkeleton height={280} className="mb-6" />
+        <TableSkeleton rows={6} cols={5} />
+      </Page>
+    );
+  }
+
   return (
     <Page
       title="Total # Messages"

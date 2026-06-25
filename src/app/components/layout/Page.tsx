@@ -42,7 +42,7 @@ export function Page({
         showFilters={showFilters}
         onFiltersClick={() => setIsFiltersOpen(true)}
       />
-      {chips && chips.length > 0 && <FilterBar chips={chips} onChipsChange={setChips} />}
+      {chips && chips.length > 0 && <FilterBar chips={chips} onChipsChange={setChips} onFiltersClick={() => setIsFiltersOpen(true)} />}
       <div className="space-y-4 px-6 py-5 min-w-0 flex-1 animate-fade-in-up">{children}</div>
 
       <ManageFiltersSidebar

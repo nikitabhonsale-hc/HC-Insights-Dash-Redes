@@ -5,6 +5,8 @@ import { Page } from "../../components/layout/Page";
 import { acoChips } from "../../data/filters";
 import { KpiCard } from "../../components/dashboard/KpiCard";
 import { BarChart, Bar, AreaChart, Area, XAxis, YAxis, CartesianGrid, ResponsiveContainer, Tooltip as RechartsTooltip, Cell } from "recharts";
+import { usePageLoading } from "../../hooks/usePageLoading";
+import { KpiCardSkeleton, ChartSkeleton, TableSkeleton } from "../../components/dashboard/SkeletonPrimitives";
 
 type MeasureCardProps = {
   id: string;
@@ -159,6 +161,9 @@ const COLORS = {
 };
 
 export default function AcoOverview() {
+  const isLoading = usePageLoading();
+
+
   const [selectedMeasureId, setSelectedMeasureId] = useState<string>(measures[0].id);
 
   const selectedMeasure = measures.find((m) => m.id === selectedMeasureId) || measures[0];
@@ -178,6 +183,27 @@ export default function AcoOverview() {
     { month: "Apr", met: Math.floor(selectedMeasure.counts.met * 0.95) },
     { month: "May", met: selectedMeasure.counts.met },
   ];
+
+  if (isLoading) {
+    return (
+      <Page title="Dashboard / Overview" crumbs={[{ label: "ACO Insights" }]}>
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 mb-6">
+          <KpiCardSkeleton />
+          <KpiCardSkeleton />
+          <KpiCardSkeleton />
+          <KpiCardSkeleton />
+          <KpiCardSkeleton />
+          <KpiCardSkeleton />
+          <KpiCardSkeleton />
+        </div>
+        <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 mb-6">
+          <ChartSkeleton height={280} />
+          <ChartSkeleton height={280} />
+        </div>
+        <TableSkeleton rows={6} cols={5} />
+      </Page>
+    );
+  }
 
   return (
     <Page title="Dashboard / Overview" crumbs={[{ label: "ACO Insights" }]} chips={acoChips}>

@@ -34,7 +34,7 @@ export default function SupportPage() {
             </p>
           </CardContent>
           <CardFooter>
-            <Button className="w-full py-6 text-base font-semibold" onClick={() => window.close()}>
+            <Button className="w-full py-6 text-base font-semibold transition-transform duration-150 active:scale-[0.97]" onClick={() => window.close()}>
               Close Window
             </Button>
           </CardFooter>
@@ -68,7 +68,7 @@ export default function SupportPage() {
                   Type of Issue <span className="text-primary">*</span>
                 </Label>
                 <Select required>
-                  <SelectTrigger id="issue-type" className="h-11">
+                  <SelectTrigger id="issue-type" className="h-11 bg-slate-100 text-slate-900">
                     <SelectValue placeholder="Select the type of issue" />
                   </SelectTrigger>
                   <SelectContent>
@@ -85,13 +85,13 @@ export default function SupportPage() {
                   <Label htmlFor="person-name" className="font-semibold text-slate-700">
                     Your Name <span className="text-primary">*</span>
                   </Label>
-                  <Input id="person-name" required placeholder="John Doe" className="h-11" />
+                  <Input id="person-name" required placeholder="John Doe" className="h-11 bg-slate-100 placeholder:text-slate-500 text-slate-900" />
                 </div>
                 <div className="flex flex-col gap-2">
                   <Label htmlFor="email" className="font-semibold text-slate-700">
                     Email Address <span className="text-primary">*</span>
                   </Label>
-                  <Input id="email" type="email" required placeholder="john@example.com" className="h-11" />
+                  <Input id="email" type="email" required placeholder="john@example.com" className="h-11 bg-slate-100 placeholder:text-slate-500 text-slate-900" />
                 </div>
               </div>
 
@@ -100,13 +100,13 @@ export default function SupportPage() {
                   <Label htmlFor="network-name" className="font-semibold text-slate-700">
                     Name of Network <span className="text-slate-400 font-normal ml-1">(Optional)</span>
                   </Label>
-                  <Input id="network-name" placeholder="Enter network name" className="h-11" />
+                  <Input id="network-name" placeholder="Enter network name" className="h-11 bg-slate-100 placeholder:text-slate-500 text-slate-900" />
                 </div>
                 <div className="flex flex-col gap-2">
                   <Label htmlFor="practice-name" className="font-semibold text-slate-700">
                     Name of Practice <span className="text-slate-400 font-normal ml-1">(Optional)</span>
                   </Label>
-                  <Input id="practice-name" placeholder="Enter practice name" className="h-11" />
+                  <Input id="practice-name" placeholder="Enter practice name" className="h-11 bg-slate-100 placeholder:text-slate-500 text-slate-900" />
                 </div>
               </div>
               
@@ -115,17 +115,17 @@ export default function SupportPage() {
                 <textarea 
                   id="details" 
                   rows={4} 
-                  className="flex w-full rounded-md border border-slate-300 bg-transparent px-3 py-2 text-sm shadow-sm placeholder:text-slate-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:border-primary disabled:cursor-not-allowed disabled:opacity-50" 
+                  className="flex w-full rounded-md border border-slate-300 bg-slate-100 px-3 py-2 text-sm shadow-sm text-slate-900 placeholder:text-slate-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:border-primary disabled:cursor-not-allowed disabled:opacity-50" 
                   placeholder="Please describe your issue in detail..." 
                 />
               </div>
             </form>
           </CardContent>
           <CardFooter className="flex justify-between border-t border-slate-100 bg-slate-50/50 pt-6 mt-2 rounded-b-xl">
-            <Button variant="outline" type="button" onClick={() => window.close()} className="h-12 px-6 font-semibold">
+            <Button variant="outline" type="button" onClick={() => window.close()} className="h-12 px-6 font-semibold hover:bg-slate-100 hover:text-slate-900 transition-transform duration-150 active:scale-[0.97]">
               Cancel
             </Button>
-            <Button type="submit" form="support-form" className="h-12 px-8 font-semibold">
+            <Button type="submit" form="support-form" className="h-12 px-8 font-semibold transition-transform duration-150 active:scale-[0.97]">
               Submit Request
             </Button>
           </CardFooter>

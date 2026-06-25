@@ -3,6 +3,8 @@ import { AlertTriangle, Activity, HeartCrack, TrendingUp, Users, type LucideIcon
 import { Page } from "../../components/layout/Page";
 import { acoChips } from "../../data/filters";
 import { KpiCard } from "../../components/dashboard/KpiCard";
+import { usePageLoading } from "../../hooks/usePageLoading";
+import { KpiCardSkeleton, ChartSkeleton } from "../../components/dashboard/SkeletonPrimitives";
 
 type MetricCardProps = {
   title: string;
@@ -90,6 +92,22 @@ const columns: Column<HighCostPatientRow>[] = [
 ];
 
 export default function AcoUtilization() {
+  const isLoading = usePageLoading();
+
+  if (isLoading) {
+    return (
+      <Page title="Utilization" crumbs={[{ label: "ACO Insights" }]}>
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 mb-6">
+          <KpiCardSkeleton />
+          <KpiCardSkeleton />
+          <KpiCardSkeleton />
+          <KpiCardSkeleton />
+        </div>
+        <ChartSkeleton height={280} className="mb-6" />
+      </Page>
+    );
+  }
+
   return (
     <Page title="Utilization Metrics" crumbs={[{ label: "ACO Insights" }]} chips={acoChips}>
       <div className="space-y-8">

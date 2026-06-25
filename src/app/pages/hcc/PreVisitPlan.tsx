@@ -3,6 +3,8 @@ import { hccChips } from "../../data/filters";
 import { CalendarCheck, Eye } from "lucide-react";
 import { DataTable, type Column } from "../../components/dashboard/DataTable";
 import { Button } from "../../components/ui/button";
+import { usePageLoading } from "../../hooks/usePageLoading";
+import { TableSkeleton } from "../../components/dashboard/SkeletonPrimitives";
 
 import { PATIENT_DATA, PatientRow } from "../../data/patients";
 
@@ -65,6 +67,16 @@ const columns: Column<PatientRow>[] = [
 ];
 
 export default function PreVisitPlan() {
+  const isLoading = usePageLoading();
+
+  if (isLoading) {
+    return (
+      <Page title="Pre-visit Planning Queue" crumbs={[{ label: "HCC Insights" }]} chips={hccChips}>
+        <TableSkeleton rows={6} cols={5} />
+      </Page>
+    );
+  }
+
   return (
     <Page title="Pre-visit Planning Queue" crumbs={[{ label: "HCC Insights" }]} chips={hccChips}>
       <div className="space-y-4">

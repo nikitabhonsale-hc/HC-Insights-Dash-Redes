@@ -94,7 +94,7 @@ function Tile({
   children: ReactNode;
 }) {
   return (
-    <Panel title={title} className={`h-full ${span}`}>
+    <Panel title={title} className={span}>
       {children}
     </Panel>
   );
@@ -154,7 +154,7 @@ export default function DesignSystem() {
     <Page title="Design System" showGenerateReport={false} showIconActions={false} showFilters={false}>
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-6">
         {/* Intro */}
-        <Panel className="h-full lg:col-span-4">
+        <Panel className="lg:col-span-4">
           <div className="flex flex-col items-start gap-4">
             <LogoIcon />
             <div>
@@ -179,7 +179,7 @@ export default function DesignSystem() {
 
         {/* Typeface */}
         <Tile title="Typeface" span="lg:col-span-2">
-          <div className="flex h-full flex-col justify-between py-1">
+          <div className="flex flex-col justify-between py-1">
             <span className="text-foreground tracking-tight font-medium" style={{ fontSize: "3rem", lineHeight: 1 }}>
               AaBbCcDd1234
             </span>
@@ -233,11 +233,11 @@ export default function DesignSystem() {
 
         {/* Corner radius */}
         <Tile title="Corner Radius" span="lg:col-span-2">
-          <div className="flex items-end justify-between gap-3">
+          <div className="grid grid-cols-2 gap-4">
             {RADII.map((r) => (
-              <div key={r.name} className="flex flex-1 flex-col items-center gap-2">
+              <div key={r.name} className="flex flex-col items-center gap-2">
                 <div
-                  className="h-12 w-full border-2 border-primary bg-secondary"
+                  className="h-20 w-full border-2 border-primary bg-secondary"
                   style={{ borderRadius: r.value }}
                 />
                 <span className="text-center text-[11px] text-slate-500">{r.name}</span>
@@ -263,10 +263,10 @@ export default function DesignSystem() {
 
         {/* Elevation */}
         <Tile title="Elevation" span="lg:col-span-2">
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-2 gap-4">
             {SHADOWS.map((s) => (
               <div key={s.name} className="flex flex-col items-center gap-2">
-                <div className={`grid h-14 w-full place-items-center rounded-md border bg-card ${s.cls}`}>
+                <div className={`grid h-24 w-full place-items-center rounded-md border bg-card ${s.cls}`}>
                   <span className="text-[11px] text-slate-400">{s.name}</span>
                 </div>
               </div>

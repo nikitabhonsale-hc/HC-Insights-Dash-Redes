@@ -65,8 +65,31 @@ const CustomPieTooltip = ({ active, payload }: any) => {
 
 import { Page } from "../../components/layout/Page";
 import { hccChips } from "../../data/filters";
+import { usePageLoading } from "../../hooks/usePageLoading";
+import { KpiCardSkeleton, ChartSkeleton, PieChartSkeleton } from "../../components/dashboard/SkeletonPrimitives";
 
 export default function HccOverview() {
+  const isLoading = usePageLoading();
+
+  if (isLoading) {
+    return (
+      <Page title="HCC Overview" crumbs={[{ label: "HCC Insights" }]}>
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 mb-6">
+          <KpiCardSkeleton />
+          <KpiCardSkeleton />
+          <KpiCardSkeleton />
+          <KpiCardSkeleton />
+          <KpiCardSkeleton />
+          <KpiCardSkeleton />
+          <KpiCardSkeleton />
+          <KpiCardSkeleton />
+        </div>
+        <ChartSkeleton height={280} className="mb-6" />
+        <PieChartSkeleton className="mb-6" />
+      </Page>
+    );
+  }
+
   return (
     <Page title="HCC Overview" crumbs={[{ label: "HCC Insights" }]} chips={hccChips}>
       <div className="space-y-6">

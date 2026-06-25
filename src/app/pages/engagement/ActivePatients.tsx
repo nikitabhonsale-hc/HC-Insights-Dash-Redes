@@ -4,6 +4,8 @@ import { Panel } from "../../components/dashboard/EmptyState";
 import { AreaTrend } from "../../components/dashboard/charts";
 import { baseChips } from "../../data/filters";
 import { activePatientsTrend } from "../../data/datasets";
+import { usePageLoading } from "../../hooks/usePageLoading";
+import { KpiCardSkeleton, ChartSkeleton } from "../../components/dashboard/SkeletonPrimitives";
 
 const noteLines = [
   "Date Range < 15 Days: Daily data, each day as a unit.",
@@ -13,6 +15,17 @@ const noteLines = [
 ];
 
 export default function ActivePatients() {
+  const isLoading = usePageLoading();
+
+  if (isLoading) {
+    return (
+      <Page title="Active Patients (As of End Date)" crumbs={[{ label: "Engagement and Utilization", to: "/engagement" }]} chips={baseChips}>
+        <KpiCardSkeleton className="max-w-xs" />
+        <ChartSkeleton height={280} />
+      </Page>
+    );
+  }
+
   return (
     <Page
       title="Active Patients (As of End Date)"

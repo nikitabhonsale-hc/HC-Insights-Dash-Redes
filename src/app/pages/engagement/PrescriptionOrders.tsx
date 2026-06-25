@@ -8,6 +8,8 @@ import { IdCell } from "../../components/dashboard/cells";
 import { ToggleTabs } from "../../components/dashboard/ToggleTabs";
 import { baseChips } from "../../data/filters";
 import { prescriptions, prescriptionTrend, type PrescriptionRow } from "../../data/datasets";
+import { usePageLoading } from "../../hooks/usePageLoading";
+import { KpiCardSkeleton, ChartSkeleton, TableSkeleton } from "../../components/dashboard/SkeletonPrimitives";
 
 const columns: Column<PrescriptionRow>[] = [
   { key: "id", header: "Patient ID", cell: (r) => <IdCell id={r.id} /> },
@@ -22,8 +24,24 @@ const columns: Column<PrescriptionRow>[] = [
 ];
 
 export default function PrescriptionOrders() {
+  const isLoading = usePageLoading();
+
+
   const [tab, setTab] = useState("overall");
   const rows = tab === "refills" ? prescriptions.filter((_, i) => i % 3 === 0) : prescriptions;
+
+  if (isLoading) {
+    return (
+      <Page title="Prescription Orders" crumbs={[{ label: "Engagement and Utilization", to: "/engagement" }]}>
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-2 mb-6">
+          <KpiCardSkeleton />
+          <KpiCardSkeleton />
+        </div>
+        <ChartSkeleton height={280} className="mb-6" />
+        <TableSkeleton rows={6} cols={5} />
+      </Page>
+    );
+  }
 
   return (
     <Page

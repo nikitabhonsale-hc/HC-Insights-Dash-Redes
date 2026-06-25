@@ -3,8 +3,24 @@ import { Page } from "../../components/layout/Page";
 import { acoChips } from "../../data/filters";
 import { Card } from "../../components/ui/card";
 import { Button } from "../../components/ui/button";
+import { usePageLoading } from "../../hooks/usePageLoading";
+import { KpiCardSkeleton, TableSkeleton } from "../../components/dashboard/SkeletonPrimitives";
 
 export default function AcoReports() {
+  const isLoading = usePageLoading();
+
+  if (isLoading) {
+    return (
+      <Page title="Reports" crumbs={[{ label: "ACO Insights" }]}>
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-2 mb-6">
+          <KpiCardSkeleton />
+          <KpiCardSkeleton />
+        </div>
+        <TableSkeleton rows={6} cols={5} />
+      </Page>
+    );
+  }
+
   return (
     <Page title="Reports" crumbs={[{ label: "ACO Insights" }]} chips={acoChips}>
       <div className="space-y-6">

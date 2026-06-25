@@ -3,6 +3,8 @@ import { outcomesChips } from "../../data/filters";
 import { KpiCard } from "../../components/dashboard/KpiCard";
 import { Users, ShieldAlert, AlertCircle, CalendarClock, Pill, Activity, LayoutDashboard } from "lucide-react";
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip as RechartsTooltip } from "recharts";
+import { usePageLoading } from "../../hooks/usePageLoading";
+import { KpiCardSkeleton, PieChartSkeleton } from "../../components/dashboard/SkeletonPrimitives";
 
 const kpiData = [
   { id: "total-patients", title: "Total Patients", value: "1,550", caption: "Actively monitored patients", icon: Users },
@@ -44,6 +46,24 @@ const CustomPieTooltip = ({ active, payload }: any) => {
 };
 
 export default function DashboardOverview() {
+  const isLoading = usePageLoading();
+
+  if (isLoading) {
+    return (
+      <Page title="Dashboard" crumbs={[{ label: "Patient Outcomes" }]}>
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 mb-6">
+          <KpiCardSkeleton />
+          <KpiCardSkeleton />
+          <KpiCardSkeleton />
+          <KpiCardSkeleton />
+          <KpiCardSkeleton />
+          <KpiCardSkeleton />
+        </div>
+        <PieChartSkeleton className="mb-6" />
+      </Page>
+    );
+  }
+
   return (
     <Page title="Dashboard" crumbs={[{ label: "Patient Outcomes" }]} chips={outcomesChips}>
       <div className="space-y-6">
