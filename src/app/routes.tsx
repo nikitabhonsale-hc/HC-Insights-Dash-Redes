@@ -36,6 +36,15 @@ import HccPreVisitPlan from "./pages/hcc/PreVisitPlan";
 import HccCodingQueue from "./pages/hcc/CodingQueue";
 import HccBulkAudit from "./pages/hcc/BulkAudit";
 
+// Admin Imports
+import ManageUsers from "./pages/admin/ManageUsers";
+import OnboardingManagement from "./pages/admin/OnboardingManagement";
+import ManageOrganization from "./pages/admin/ManageOrganization";
+import OrgPatientCounts from "./pages/admin/OrgPatientCounts";
+import InboundIntegrationBatches from "./pages/admin/InboundIntegrationBatches";
+import SurveyConfiguration from "./pages/admin/SurveyConfiguration";
+import SurveyTemplates from "./pages/admin/SurveyTemplates";
+
 // ACO Insights Imports
 import AcoLayout from "./pages/aco/AcoLayout";
 import AcoOverview from "./pages/aco/AcoOverview";
@@ -137,6 +146,19 @@ export const router = createBrowserRouter([
           { path: "medication-refills", Component: MedicationRefills },
           { path: "lab-cadence", Component: LabCadence },
           { path: "report-builder", Component: ReportBuilder },
+        ],
+      },
+      {
+        path: "admin",
+        children: [
+          { index: true, element: <Navigate to="/admin/users" replace /> },
+          { path: "users", Component: ManageUsers },
+          { path: "onboarding", Component: OnboardingManagement },
+          { path: "organization", Component: ManageOrganization },
+          { path: "patient-counts", Component: OrgPatientCounts },
+          { path: "integration-batches", Component: InboundIntegrationBatches },
+          { path: "survey-config", Component: SurveyConfiguration },
+          { path: "templates", Component: SurveyTemplates },
         ],
       },
       { path: "*", element: <Navigate to="/engagement" replace /> },

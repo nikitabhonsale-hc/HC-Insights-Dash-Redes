@@ -7,7 +7,7 @@ import { Badge } from "../ui/badge";
 
 export function AiInsightsTab() {
   return (
-    <ScrollArea className="flex-1 px-4 py-2">
+    <ScrollArea className="flex-1 min-h-0 h-full px-4 py-2">
       <div className="flex flex-col gap-4 pb-4">
         
         {/* Context-Aware Summary */}

@@ -1,5 +1,5 @@
 import { useMemo, useState, type ReactNode } from "react";
-import { ChevronLeft, ChevronRight, Search } from "lucide-react";
+import { ChevronLeft, ChevronRight, Search, ArrowUpDown, ArrowUp, ArrowDown } from "lucide-react";
 import {
   Table,
   TableBody,
@@ -145,18 +145,48 @@ export function DataTable<T>({
         <Table className="flex-1">
           <TableHeader className="sticky top-0 z-10">
             <TableRow className="border-b bg-muted hover:bg-muted">
-              {columns.map((c) => (
-                <TableHead
-                  key={c.key}
-                  className={cn(
-                    "h-11 whitespace-nowrap bg-muted text-sm font-medium tracking-wide text-slate-500 uppercase",
-                    alignClass(c.align),
-                    c.className,
-                  )}
-                >
-                  {c.header}
-                </TableHead>
-              ))}
+              {columns.map((c) => {
+                const isSorted = sortConfig?.key === c.key;
+                const dir = isSorted ? sortConfig.dir : null;
+
+                return (
+                  <TableHead
+                    key={c.key}
+                    className={cn(
+                      "h-11 whitespace-nowrap bg-muted text-sm font-medium tracking-wide text-slate-500 uppercase select-none cursor-pointer hover:bg-muted/80 hover:text-foreground transition-colors group/th",
+                      alignClass(c.align),
+                      c.className,
+                    )}
+                    onClick={() => {
+                      if (sortConfig?.key !== c.key) {
+                        setSortConfig({ key: c.key, dir: "asc" });
+                      } else if (sortConfig?.dir === "asc") {
+                        setSortConfig({ key: c.key, dir: "desc" });
+                      } else {
+                        setSortConfig(null);
+                      }
+                      setPage(1);
+                    }}
+                  >
+                    <div className={cn(
+                      "inline-flex items-center gap-1.5",
+                      c.align === "right" && "flex-row-reverse justify-end",
+                      c.align === "center" && "justify-center w-full"
+                    )}>
+                      <span>{c.header}</span>
+                      <span className="inline-flex items-center justify-center size-4 shrink-0 rounded">
+                        {dir === "asc" ? (
+                          <ArrowUp className="size-3 text-primary font-bold" />
+                        ) : dir === "desc" ? (
+                          <ArrowDown className="size-3 text-primary font-bold" />
+                        ) : (
+                          <ArrowUpDown className="size-3 text-slate-400 opacity-40 group-hover/th:opacity-100 transition-opacity" />
+                        )}
+                      </span>
+                    </div>
+                  </TableHead>
+                );
+              })}
             </TableRow>
           </TableHeader>
           <TableBody>

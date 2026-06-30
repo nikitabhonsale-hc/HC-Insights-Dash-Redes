@@ -2,6 +2,9 @@ import { useState, useRef, useEffect } from "react";
 import { Button } from "../../../components/ui/button";
 import { Input } from "../../../components/ui/input";
 import { Label } from "../../../components/ui/label";
+import { Switch } from "../../../components/ui/switch";
+import { Badge } from "../../../components/ui/badge";
+import { X } from "lucide-react";
 import { cn } from "../../../components/ui/utils";
 
 const MOCK_NETWORKS = [
@@ -25,12 +28,14 @@ const MOCK_NETWORKS = [
 ];
 
 function NetworkAutocomplete({ 
-  value, 
-  onChange,
+  selectedNetworks, 
+  onAddNetwork,
+  onRemoveNetwork,
   onOpenChange 
 }: { 
-  value: string; 
-  onChange: (val: string) => void;
+  selectedNetworks: string[]; 
+  onAddNetwork: (net: string) => void;
+  onRemoveNetwork: (net: string) => void;
   onOpenChange: (isOpen: boolean) => void;
 }) {
   const [inputValue, setInputValue] = useState("");
@@ -43,22 +48,21 @@ function NetworkAutocomplete({
   }, [isOpen, onOpenChange]);
 
   const filtered = inputValue.length >= 4 
-    ? MOCK_NETWORKS.filter(n => n.toLowerCase().includes(inputValue.toLowerCase()))
+    ? MOCK_NETWORKS.filter(n => 
+        n.toLowerCase().includes(inputValue.toLowerCase()) &&
+        !selectedNetworks.includes(n)
+      )
     : [];
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
         setIsOpen(false);
-        // Revert to selected value if they clicked away without choosing
-        if (value !== inputValue) {
-           setInputValue(value);
-        }
       }
     };
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, [value, inputValue]);
+  }, []);
 
   return (
     <div className="relative w-full" ref={containerRef}>
@@ -68,20 +72,27 @@ function NetworkAutocomplete({
         aria-expanded={isOpen && inputValue.length >= 4}
         aria-controls="network-listbox"
         aria-autocomplete="list"
-        placeholder="Type at least 4 characters to search..."
+        placeholder="Type at least 4 characters to search and add networks..."
         className="h-11 bg-muted border-border text-foreground placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-primary"
         value={inputValue}
         onChange={(e) => {
           setInputValue(e.target.value);
           if (e.target.value.length >= 4) setIsOpen(true);
           else setIsOpen(false);
-          
-          if (value) onChange(""); 
         }}
         onFocus={() => {
           if (inputValue.length >= 4) setIsOpen(true);
         }}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' && isOpen && filtered.length > 0) {
+            e.preventDefault();
+            onAddNetwork(filtered[0]);
+            setInputValue("");
+            setIsOpen(false);
+          }
+        }}
       />
+      
       {isOpen && inputValue.length >= 4 && (
         <div 
           id="network-listbox"
@@ -94,11 +105,11 @@ function NetworkAutocomplete({
                 <div
                   key={network}
                   role="option"
-                  aria-selected={value === network}
+                  aria-selected={false}
                   className="px-4 py-2.5 text-sm hover:bg-muted cursor-pointer text-foreground transition-colors"
                   onClick={() => {
-                    setInputValue(network);
-                    onChange(network);
+                    onAddNetwork(network);
+                    setInputValue("");
                     setIsOpen(false);
                   }}
                 >
@@ -113,7 +124,7 @@ function NetworkAutocomplete({
               </span>
               <button 
                 type="button"
-                className="text-[13px] font-semibold text-primary hover:underline transition-all focus:outline-none focus:ring-2 focus:ring-primary rounded px-1"
+                className="text-[13px] font-semibold text-primary hover:underline transition-all focus:outline-none focus:ring-2 focus:ring-primary rounded px-1 cursor-pointer"
                 onClick={(e) => {
                   e.preventDefault();
                   window.open('/support', '_blank');
@@ -123,6 +134,30 @@ function NetworkAutocomplete({
               </button>
             </div>
           )}
+        </div>
+      )}
+
+      {/* Selected Networks Pills */}
+      {selectedNetworks.length > 0 && (
+        <div className="flex flex-wrap gap-2 pt-3">
+          {selectedNetworks.map((net) => (
+            <Badge
+              key={net}
+              variant="secondary"
+              className="px-3 py-1.5 rounded-full text-xs font-medium bg-primary/10 text-primary border border-primary/20 flex items-center gap-1.5 shadow-2xs transition-all animate-in zoom-in-95 duration-150"
+            >
+              <span>{net}</span>
+              <button
+                type="button"
+                onClick={() => onRemoveNetwork(net)}
+                className="rounded-full p-0.5 hover:bg-primary/20 text-primary transition-colors focus:outline-none focus:ring-1 focus:ring-primary cursor-pointer"
+                title={`Remove ${net}`}
+                aria-label={`Remove ${net}`}
+              >
+                <X className="size-3" />
+              </button>
+            </Badge>
+          ))}
         </div>
       )}
     </div>
@@ -136,10 +171,11 @@ export interface NetworkAssociationStepProps {
 
 export function NetworkAssociationStep({ onNext, onPrev }: NetworkAssociationStepProps) {
   const [isAffiliated, setIsAffiliated] = useState(true);
-  const [networkName, setNetworkName] = useState("");
+  const [isIndependent, setIsIndependent] = useState(false);
+  const [selectedNetworks, setSelectedNetworks] = useState<string[]>([]);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   
-  const canProceed = !isAffiliated || (isAffiliated && networkName.length > 0);
+  const canProceed = !isAffiliated || (isAffiliated && selectedNetworks.length > 0);
 
   return (
     <div className="flex flex-col animate-in fade-in slide-in-from-bottom-2 duration-500 ease-out h-full">
@@ -170,7 +206,7 @@ export function NetworkAssociationStep({ onNext, onPrev }: NetworkAssociationSte
               aria-pressed={isAffiliated}
               onClick={() => setIsAffiliated(true)}
               className={cn(
-                "relative z-10 px-8 py-1.5 text-sm font-semibold rounded-full transition-colors duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+                "relative z-10 px-8 py-1.5 text-sm font-semibold rounded-full transition-colors duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring cursor-pointer",
                 isAffiliated ? "text-primary-foreground" : "text-muted-foreground hover:text-foreground"
               )}
             >
@@ -181,7 +217,7 @@ export function NetworkAssociationStep({ onNext, onPrev }: NetworkAssociationSte
               aria-pressed={!isAffiliated}
               onClick={() => setIsAffiliated(false)}
               className={cn(
-                "relative z-10 px-8 py-1.5 text-sm font-semibold rounded-full transition-colors duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+                "relative z-10 px-8 py-1.5 text-sm font-semibold rounded-full transition-colors duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring cursor-pointer",
                 !isAffiliated ? "text-foreground" : "text-muted-foreground hover:text-foreground"
               )}
             >
@@ -190,22 +226,38 @@ export function NetworkAssociationStep({ onNext, onPrev }: NetworkAssociationSte
           </div>
         </div>
 
+        {/* Independent DPC Switch */}
+        <div className="flex items-center justify-between p-4 rounded-xl border border-border bg-card shadow-2xs">
+          <div className="flex flex-col gap-0.5 pr-4">
+            <Label htmlFor="independent-dpc-switch" className="text-[15px] font-semibold text-foreground cursor-pointer">
+              Are you onboarding as an Independent DPC
+            </Label>
+            <span className="text-xs text-muted-foreground">Select if operating independently without network sponsorship</span>
+          </div>
+          <Switch 
+            id="independent-dpc-switch" 
+            checked={isIndependent} 
+            onCheckedChange={setIsIndependent} 
+          />
+        </div>
+
         <div 
           className="grid transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]"
           style={{ 
             gridTemplateRows: isAffiliated ? "1fr" : "0fr", 
             opacity: isAffiliated ? 1 : 0,
-            marginTop: isAffiliated ? "0.5rem" : "0"
+            marginTop: isAffiliated ? "0.25rem" : "0"
           }}
         >
           <div className={cn("px-2 -mx-2 pt-1 -mt-1", !isDropdownOpen && "overflow-hidden")}>
             <div className="flex flex-col gap-1.5 pb-2">
               <Label htmlFor="networkAutocomplete" className="text-[15px] font-semibold text-foreground">
-                Network Name <span className="text-primary" aria-hidden="true">*</span>
+                Network Names <span className="text-primary" aria-hidden="true">*</span>
               </Label>
               <NetworkAutocomplete 
-                value={networkName} 
-                onChange={setNetworkName} 
+                selectedNetworks={selectedNetworks} 
+                onAddNetwork={(net) => setSelectedNetworks(prev => [...prev, net])}
+                onRemoveNetwork={(net) => setSelectedNetworks(prev => prev.filter(n => n !== net))}
                 onOpenChange={setIsDropdownOpen}
               />
             </div>
@@ -218,7 +270,7 @@ export function NetworkAssociationStep({ onNext, onPrev }: NetworkAssociationSte
           type="button"
           variant="outline"
           onClick={onPrev}
-          className="flex-1 rounded-md border-border bg-card text-foreground hover:bg-muted py-6 text-base font-semibold"
+          className="flex-1 rounded-md border-border bg-card text-foreground hover:bg-muted py-6 text-base font-semibold cursor-pointer"
         >
           Previous
         </Button>
@@ -226,7 +278,7 @@ export function NetworkAssociationStep({ onNext, onPrev }: NetworkAssociationSte
           type="button"
           onClick={onNext} 
           disabled={!canProceed}
-          className="flex-[2] rounded-md py-6 text-base font-semibold"
+          className="flex-[2] rounded-md py-6 text-base font-semibold cursor-pointer"
         >
           Create
         </Button>

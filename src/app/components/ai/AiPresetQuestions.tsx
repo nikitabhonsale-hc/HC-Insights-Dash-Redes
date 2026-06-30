@@ -1,26 +1,33 @@
 import React from 'react';
-import { Badge } from "../ui/badge";
+import { Sparkles, ArrowUpRight } from "lucide-react";
 
 const PRESETS = [
-  "Summarize patient risk",
-  "Show utilization gaps",
-  "Generate outcomes report",
-  "Any new coding opportunities?"
+  "Summarize patient risk profile",
+  "Show quarterly utilization gaps",
+  "Generate ACO outcomes summary",
+  "Identify HCC coding drop-offs"
 ];
 
 export function AiPresetQuestions({ onSelect }: { onSelect: (question: string) => void }) {
   return (
-    <div className="flex flex-wrap gap-2">
-      {PRESETS.map((preset) => (
-        <Badge
-          key={preset}
-          variant="secondary"
-          className="cursor-pointer hover:bg-secondary/80 text-xs py-1"
-          onClick={() => onSelect(preset)}
-        >
-          {preset}
-        </Badge>
-      ))}
+    <div className="flex flex-col gap-2 mb-3">
+      <span className="text-[11px] font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 flex items-center gap-1.5">
+        <Sparkles className="size-3 text-[#e32168]" />
+        <span>Suggested Prompts</span>
+      </span>
+      <div className="flex flex-wrap gap-1.5">
+        {PRESETS.map((preset) => (
+          <button
+            key={preset}
+            type="button"
+            onClick={() => onSelect(preset)}
+            className="group inline-flex items-center gap-1 text-left rounded-full border border-slate-200 dark:border-slate-800 bg-background/90 hover:bg-[#e32168]/5 hover:border-[#e32168]/40 px-3 py-1 text-xs font-medium text-slate-600 dark:text-slate-300 hover:text-[#e32168] transition-all duration-150 shadow-2xs cursor-pointer active:scale-95"
+          >
+            <span>{preset}</span>
+            <ArrowUpRight className="size-3 opacity-40 group-hover:opacity-100 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all text-[#e32168]" />
+          </button>
+        ))}
+      </div>
     </div>
   );
 }

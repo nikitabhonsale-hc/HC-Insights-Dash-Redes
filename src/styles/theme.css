@@ -115,30 +115,40 @@
   --card-foreground: #000000;
   --popover: #ffffff;
   --popover-foreground: #000000;
-  --border: #000000;
-  --input: #000000;
+  --border: #cbd5e1;
+  --input: #cbd5e1;
   --muted: #f0f0f0;
   --muted-foreground: #000000;
   --sidebar: #ffffff;
   --sidebar-foreground: #000000;
-  --sidebar-border: #000000;
+  --sidebar-border: #cbd5e1;
 }
 
 .high-contrast.dark,
 .dark.high-contrast {
-  --background: #000000;
+  --background: #08080a;
   --foreground: #ffffff;
-  --card: #000000;
+  --card: #18181c;
   --card-foreground: #ffffff;
-  --popover: #000000;
+  --popover: #18181c;
   --popover-foreground: #ffffff;
-  --border: #ffffff;
-  --input: #ffffff;
-  --muted: #111111;
+  --border: #334155;
+  --input: #334155;
+  --muted: #242428;
   --muted-foreground: #ffffff;
-  --sidebar: #000000;
+  --sidebar: #101014;
   --sidebar-foreground: #ffffff;
-  --sidebar-border: #ffffff;
+  --sidebar-border: #334155;
+}
+
+/* Card and container outlines in high contrast mode */
+.high-contrast .bg-card,
+.high-contrast [class*="bg-card"],
+.high-contrast .border,
+.high-contrast [role="dialog"],
+.high-contrast [role="alert"] {
+  outline: 0.5px solid var(--border) !important;
+  outline-offset: -1px;
 }
 
 html.large-text {

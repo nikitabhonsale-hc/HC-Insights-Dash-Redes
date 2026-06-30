@@ -1,4 +1,4 @@
-import { NavLink, useLocation } from "react-router";
+import { NavLink, Link, useLocation } from "react-router";
 import { 
   MessageSquarePlus, 
   ChevronRight, 
@@ -19,7 +19,9 @@ import {
   Moon,
   Type,
   Contrast,
-  HelpCircle
+  HelpCircle,
+  ClipboardList,
+  FileText,
 } from "lucide-react";
 import { NAV_ITEMS, HCC_NAV_ITEMS, ACO_NAV_ITEMS, OUTCOMES_NAV_ITEMS, SYSTEM_NAV_ITEMS, type NavItem } from "../../lib/navigation";
 import {
@@ -226,25 +228,47 @@ export function AppSidebar() {
                   </div>
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem>
-                  <UserCog className="mr-2" />
-                  Manage Users
+                <DropdownMenuItem asChild>
+                  <Link to="/admin/users" className="flex items-center cursor-pointer w-full">
+                    <UserCog className="mr-2 size-4" />
+                    <span>Manage Users</span>
+                  </Link>
                 </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <UserPlus className="mr-2" />
-                  Manage Onboarding
+                <DropdownMenuItem asChild>
+                  <Link to="/admin/onboarding" className="flex items-center cursor-pointer w-full">
+                    <UserPlus className="mr-2 size-4" />
+                    <span>Onboarding Management</span>
+                  </Link>
                 </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <Settings className="mr-2" />
-                  Manage Organization
+                <DropdownMenuItem asChild>
+                  <Link to="/admin/organization" className="flex items-center cursor-pointer w-full">
+                    <Settings className="mr-2 size-4" />
+                    <span>Manage Organization</span>
+                  </Link>
                 </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <Users className="mr-2" />
-                  Org Patient Counts
+                <DropdownMenuItem asChild>
+                  <Link to="/admin/patient-counts" className="flex items-center cursor-pointer w-full">
+                    <Users className="mr-2 size-4" />
+                    <span>Organization Patient Counts</span>
+                  </Link>
                 </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <Activity className="mr-2" />
-                  Integration Monitoring
+                <DropdownMenuItem asChild>
+                  <Link to="/admin/integration-batches" className="flex items-center cursor-pointer w-full">
+                    <Activity className="mr-2 size-4" />
+                    <span>Inbound Integration Batches</span>
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link to="/admin/survey-config" className="flex items-center cursor-pointer w-full">
+                    <ClipboardList className="mr-2 size-4" />
+                    <span>Survey Configuration</span>
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link to="/admin/templates" className="flex items-center cursor-pointer w-full">
+                    <FileText className="mr-2 size-4" />
+                    <span>Templates</span>
+                  </Link>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuSub>

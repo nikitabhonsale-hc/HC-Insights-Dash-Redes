@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { ScrollArea } from "../ui/scroll-area";
-import { Send, Bot, User, Loader2 } from "lucide-react";
+import { User, Loader2, Sparkles, CornerDownLeft } from "lucide-react";
 import { AiPresetQuestions } from "./AiPresetQuestions";
 import { cn } from "../ui/utils";
 
@@ -10,6 +10,7 @@ type Message = {
   id: string;
   role: 'user' | 'ai';
   content: string;
+  timestamp?: string;
 };
 
 export function AiChatInterface() {
@@ -17,7 +18,8 @@ export function AiChatInterface() {
     {
       id: '1',
       role: 'ai',
-      content: 'Hello! I am your HealthCompiler AI assistant. How can I help you analyze your data today?'
+      content: 'Hello! I am your HealthCompiler AI assistant. I have connected to your active workspace data across Dashboards, Encounters, and HCC Coding. How can I help you today?',
+      timestamp: 'Just now'
     }
   ]);
   const [input, setInput] = useState("");
@@ -26,23 +28,28 @@ export function AiChatInterface() {
   const handleSend = () => {
     if (!input.trim()) return;
     
-    const newMsg: Message = { id: Date.now().toString(), role: 'user', content: input };
+    const newMsg: Message = { 
+      id: Date.now().toString(), 
+      role: 'user', 
+      content: input,
+      timestamp: 'Just now'
+    };
     setMessages(prev => [...prev, newMsg]);
     setInput("");
     setIsTyping(true);
 
-    // Mock AI response
     setTimeout(() => {
       setMessages(prev => [
         ...prev, 
         { 
           id: (Date.now() + 1).toString(), 
           role: 'ai', 
-          content: 'I have analyzed your request. Based on the current view, we are seeing a 15% increase in utilization gaps this quarter. Would you like me to generate a detailed report?' 
+          content: 'I have analyzed the current filter criteria. We are observing a 15% increase in HCC risk score drop-offs this quarter compared to the benchmark. Would you like me to draft an intervention list for the clinical team?',
+          timestamp: 'Just now'
         }
       ]);
       setIsTyping(false);
-    }, 1500);
+    }, 1400);
   };
 
   const handlePresetClick = (question: string) => {
@@ -50,71 +57,98 @@ export function AiChatInterface() {
   };
 
   return (
-    <div className="flex flex-col h-full bg-muted/10">
-      <ScrollArea className="flex-1 p-4">
-        <div className="flex flex-col gap-5">
+    <div className="flex flex-col h-full min-h-0 bg-slate-50/50 dark:bg-muted/10 flex-1 relative">
+      <ScrollArea className="flex-1 min-h-0 px-4 py-4">
+        <div className="flex flex-col gap-4 pb-4">
           {messages.map((msg) => (
             <div
               key={msg.id}
-              className={cn("flex gap-3 text-sm", msg.role === 'user' ? 'flex-row-reverse' : 'flex-row')}
+              className={cn("flex gap-3 text-sm animate-fade-in-up", msg.role === 'user' ? 'flex-row-reverse' : 'flex-row')}
             >
               <div className={cn(
-                "flex h-8 w-8 shrink-0 select-none items-center justify-center rounded-full shadow-sm",
-                msg.role === 'user' ? 'bg-primary text-primary-foreground' : 'bg-card border'
+                "flex size-7 shrink-0 select-none items-center justify-center rounded-lg shadow-2xs text-xs font-semibold mt-0.5",
+                msg.role === 'user' 
+                  ? 'bg-slate-900 text-white dark:bg-slate-100 dark:text-slate-900' 
+                  : 'bg-gradient-to-br from-[#e32168] to-[#ff4d8d] text-white shadow-[#e32168]/20'
               )}>
-                {msg.role === 'user' ? <User className="size-4" /> : <Bot className="size-4 text-primary" />}
+                {msg.role === 'user' ? <User className="size-3.5" /> : <Sparkles className="size-3.5" />}
               </div>
-              <div
-                className={cn(
-                  "flex flex-col gap-2 px-3.5 py-2.5 max-w-[78%] leading-relaxed shadow-sm",
-                  msg.role === 'user'
-                    ? 'bg-primary text-primary-foreground rounded-2xl rounded-tr-sm'
-                    : 'bg-card border rounded-2xl rounded-tl-sm'
+              
+              <div className="flex flex-col gap-1 max-w-[82%]">
+                <div
+                  className={cn(
+                    "px-3.5 py-2.5 text-xs md:text-sm leading-relaxed shadow-2xs transition-all",
+                    msg.role === 'user'
+                      ? 'bg-[#e32168] text-white rounded-2xl rounded-tr-xs font-normal'
+                      : 'bg-card border border-slate-200/80 dark:border-slate-800 rounded-2xl rounded-tl-xs text-foreground font-normal'
+                  )}
+                >
+                  {msg.content}
+                </div>
+                {msg.timestamp && (
+                  <span className={cn("text-[10px] text-slate-400 px-1", msg.role === 'user' ? 'text-right' : 'text-left')}>
+                    {msg.timestamp}
+                  </span>
                 )}
-              >
-                {msg.content}
               </div>
             </div>
           ))}
+
           {isTyping && (
-             <div className="flex gap-3 text-sm flex-row">
-               <div className="flex h-8 w-8 shrink-0 select-none items-center justify-center rounded-full shadow-sm bg-card border">
-                 <Bot className="size-4 text-primary" />
+             <div className="flex gap-3 text-sm flex-row animate-fade-in-up">
+               <div className="flex size-7 shrink-0 select-none items-center justify-center rounded-lg bg-gradient-to-br from-[#e32168] to-[#ff4d8d] text-white shadow-2xs shadow-[#e32168]/20 mt-0.5">
+                 <Sparkles className="size-3.5" />
                </div>
-               <div className="flex items-center gap-2 px-4 py-3 bg-card border rounded-2xl rounded-tl-sm shadow-sm">
-                 <Loader2 className="size-4 animate-spin text-muted-foreground" />
+               <div className="flex items-center gap-2 px-4 py-3 bg-card border border-slate-200/80 dark:border-slate-800 rounded-2xl rounded-tl-xs shadow-2xs">
+                 <Loader2 className="size-3.5 animate-spin text-[#e32168]" />
+                 <span className="text-xs text-muted-foreground font-medium">Analyzing workspace data...</span>
                </div>
              </div>
           )}
         </div>
       </ScrollArea>
       
-      <div className="p-4 border-t bg-card">
+      {/* Footer Controls & Prompt Box */}
+      <div className="p-4 border-t border-slate-200/80 dark:border-slate-800 bg-card shrink-0 shadow-lg shadow-black/5">
         <AiPresetQuestions onSelect={handlePresetClick} />
+        
         <form
           onSubmit={(e) => {
             e.preventDefault();
             handleSend();
           }}
-          className="flex w-full items-center gap-2 mt-3 relative"
+          className="relative flex items-center w-full"
         >
           <Input
             type="text"
-            placeholder="Ask AI..."
+            placeholder="Ask HealthCompiler AI..."
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            className="flex-1 pr-10 shadow-sm rounded-full bg-muted/30 focus-visible:ring-1 focus-visible:bg-background transition-colors"
+            className="h-10 w-full pl-3.5 pr-11 text-xs md:text-sm rounded-xl border-slate-200 dark:border-slate-800 bg-muted/40 dark:bg-muted/20 focus-visible:ring-1 focus-visible:ring-[#e32168] focus-visible:border-[#e32168] focus-visible:bg-background transition-all shadow-inner"
           />
           <Button 
             type="submit" 
             size="icon" 
             disabled={isTyping || !input.trim()}
-            className="absolute right-1 size-8 rounded-full shadow-sm transition-transform active:scale-95"
+            className={cn(
+              "absolute right-1 size-8 rounded-lg transition-all cursor-pointer",
+              input.trim() 
+                ? "bg-[#e32168] hover:bg-[#c9185a] text-white shadow-sm shadow-[#e32168]/25 scale-100" 
+                : "bg-slate-100 dark:bg-slate-800 text-slate-400 dark:text-slate-500 scale-95"
+            )}
+            title="Submit prompt"
           >
-            <Send className="size-3.5" />
+            <CornerDownLeft className="size-3.5" />
             <span className="sr-only">Send</span>
           </Button>
         </form>
+        <div className="mt-2 flex items-center justify-between px-1 text-[10px] text-slate-400">
+          <span>Press Enter to send</span>
+          <span className="flex items-center gap-1">
+            <span className="size-1 rounded-full bg-emerald-500" />
+            <span>Active workspace context</span>
+          </span>
+        </div>
       </div>
     </div>
   );

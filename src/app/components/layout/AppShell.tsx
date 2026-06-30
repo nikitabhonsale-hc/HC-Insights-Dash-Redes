@@ -9,12 +9,6 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "../ui/sidebar";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "../ui/dropdown-menu";
 import { Separator } from "../ui/separator";
 import { Button } from "../ui/button";
 
@@ -32,7 +26,7 @@ import {
   Sparkles,
   Users,
   Target,
-  LayoutGrid
+  LayoutGrid,
 } from "lucide-react";
 
 const APPS_MENU = [
@@ -119,19 +113,6 @@ function TopBar({
           <Sparkles className="size-4" />
           <span className="font-medium">Ask AI</span>
         </Button>
-
-        <Separator orientation="vertical" className="!h-6 mx-1" />
-
-        <DropdownMenu>
-          <DropdownMenuTrigger className="flex h-9 items-center gap-2 rounded-md border bg-background px-3 text-sm outline-none hover:bg-accent data-[state=open]:border-primary transition-colors">
-            ACME Health <ChevronDown className="size-4 text-slate-400" />
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuItem>ACME Health</DropdownMenuItem>
-            <DropdownMenuItem>ACME Corp 1</DropdownMenuItem>
-            <DropdownMenuItem>ACME Corp 2</DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
       </div>
     </header>
   );
@@ -172,10 +153,10 @@ export function AppShell() {
     <OnboardingTourProvider>
       <SidebarProvider>
         <AppSidebar />
-        <SidebarInset className="bg-muted/40 flex-row p-0 overflow-hidden relative">
-          <div className="flex-1 flex flex-col min-w-0 h-screen">
+        <SidebarInset className="bg-muted/40 flex-row p-0 overflow-hidden relative h-svh max-h-svh">
+          <div className="flex-1 flex flex-col min-w-0 h-full min-h-0 overflow-hidden">
             <TopBar isAiSidebarOpen={isAiSidebarOpen} setIsAiSidebarOpen={setIsAiSidebarOpen} />
-            <main className="flex-1 min-w-0 flex flex-col overflow-auto">
+            <main className="flex-1 min-w-0 flex flex-col overflow-y-auto min-h-0">
               <Outlet />
             </main>
             <Footer />
